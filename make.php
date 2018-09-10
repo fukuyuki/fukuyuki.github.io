@@ -85,7 +85,7 @@ function makehtml( $fn ){
 //newpost();
 
 function main(){
-    echo @$_SERVER['argv'][0]."\n";
+    //echo @$_SERVER['argv'][0]."\n";
     if ( "new" ==@$_SERVER['argv'][1] ){
         newpost();
         return;
