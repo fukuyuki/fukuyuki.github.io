@@ -12,7 +12,6 @@ function newpost(){
 function make_blog(){
     global $blogname;
     $posts_list = read_post_entry();
-    var_dump( $posts_list );
     $index="";
     $title_list="";
     ( false===($b=file_get_contents( "template_index.html")))? die("can not read template") : 1;
