@@ -2,7 +2,7 @@
 //TODO
 //UPDATEをつける
 //各記事にインデックスをつける。
-
+$blogname="ふくゆきブログ(再)";
 date_default_timezone_set('Asia/Tokyo');
 
 function newpost(){
@@ -10,6 +10,7 @@ function newpost(){
 }
 
 function make_blog(){
+    global $blogname;
     $posts_list = read_post_entry();
     var_dump( $posts_list );
     $index="";
@@ -22,8 +23,8 @@ function make_blog(){
     }
     $b=mb_ereg_replace("{{list}}" , $list , $b );
 
-    $b=mb_ereg_replace("{{blogname}}" , "ふくゆきブログ" , $b );
-    $b=mb_ereg_replace("{{title}}" , "ふくゆきブログ" , $b );
+    $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
+    $b=mb_ereg_replace("{{title}}" , $blogname , $b );
     file_put_contents("index.html" , trim( $b ));
 
     foreach( $posts_list as $l ){
@@ -50,6 +51,8 @@ function read_post_entry(){
 }
 
 function makehtml( $fn ){
+    global $blogname;
+
     if ( false===($f=fopen( $fn2="./posts/".$fn , "rt"))){
         die("can not open ".$fn.".");
     }
@@ -71,7 +74,7 @@ function makehtml( $fn ){
     $b=mb_ereg_replace("{{title}}" , $title , $b );
     $b=mb_ereg_replace("{{date}}" , date("Y/m/d H:i" , filemtime( $fn2 )) , $b );
     $b=mb_ereg_replace("{{body}}" , $body , $b );
-    $b=mb_ereg_replace("{{blogname}}" , "ふくゆきブログ" , $b );
+    $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     file_put_contents( $html_fn , $b );
     return array(
         "filename"=>$html_fn,
