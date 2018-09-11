@@ -20,13 +20,13 @@ function make_blog(){
     $title_list="";
     ( false===($b=file_get_contents( "template_index.html")))? die("can not read template") : 1;
     
-    foreach ((array) $posts_list as $key => $value) {
+    /*foreach ((array) $posts_list as $key => $value) {
         var_dump( $value );
         $sort[$key] = $value['date'];
     }
     //die();
     
-    array_multisort($sort, SORT_ASC, $posts_list);
+    array_multisort($sort, SORT_ASC, $posts_list);*/
     
     foreach( $posts_list as $l ){
         $list.="<li class=\"list-group-item\"><a href=".$l["filename"].">".$l["title"]."</a><br>"
