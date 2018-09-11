@@ -3,6 +3,8 @@
 //UPDATEをつける
 //各記事にインデックスをつける。
 $blogname="ふくゆきブログ(再)";
+$blogurl="";
+
 date_default_timezone_set('Asia/Tokyo');
 
 function newpost(){
@@ -21,7 +23,6 @@ function make_blog(){
     ( false===($b=file_get_contents( "template_index.html")))? die("can not read template") : 1;
     
     foreach ((array) $posts_list as $key => $value) {
-        var_dump( $value );
         $sort[$key] = $value['date'];
     }
 
