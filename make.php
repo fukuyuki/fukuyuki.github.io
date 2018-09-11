@@ -10,7 +10,7 @@ function newpost(){
 }
 
 function make_small_html( $s ){
-    return str_replace(array("\t" , "\r" , "\n" , "     ") ,"" ,  $b );
+    return str_replace(array("\t" , "\r" , "\n" , "     ") ,"" ,  $s );
 }
 
 function make_blog(){
@@ -20,7 +20,7 @@ function make_blog(){
     $title_list="";
     ( false===($b=file_get_contents( "template_index.html")))? die("can not read template") : 1;
     
-    /*foreach ((array) $posts_list as $key => $value) {
+    foreach ((array) $posts_list as $key => $value) {
         var_dump( $value );
         $sort[$key] = $value['date'];
     }
