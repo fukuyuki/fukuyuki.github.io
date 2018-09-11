@@ -28,7 +28,7 @@ function make_blog(){
     foreach( $posts_list as $l ){
         ( false===($b=file_get_contents(  $l["filename"])))? die("can not read template") : 1;
         $b=mb_ereg_replace("{{list}}" , $title_list , $b );
-        file_put_contents( $l["filename"] , str_replace(array("\t" , "\r" , "\n" ," ") ,"" ) , $b  );
+        file_put_contents( $l["filename"] , str_replace(array("\t" , "\r" , "\n" ," ") ,"" ,  $b )  );
     }
 
 }
