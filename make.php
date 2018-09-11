@@ -6,7 +6,7 @@ $blogname="ふくゆきブログ(再)";
 date_default_timezone_set('Asia/Tokyo');
 
 function newpost(){
-    file_put_contents( "./posts/".date("YmdHi").".txt" , "TITLE\nBODYBODYBODYBODYBODYBODYBODY");
+    file_put_contents( "./posts/".date("Ymd_Hi").".txt" , "TITLE\nBODYBODYBODYBODYBODYBODYBODY");
 }
 
 function make_small_html( $s ){
