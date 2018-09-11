@@ -35,7 +35,7 @@ function make_blog(){
         ."".mb_substr( $l["body"] , 0 , 128 , "utf-8")."...</li>";
         $title_list.="<p><a href=".$l["filename"].">"
         ."(".date("Y/m/d",$l["date"]).")"
-        ."_".$l["title"]."</a><br>";
+        .$l["title"]."</a><br>";
     }
     $b=mb_ereg_replace("{{list}}" , $list , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
