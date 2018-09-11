@@ -31,7 +31,7 @@ function make_blog(){
     foreach( $posts_list as $l ){
         $list.="<li class=\"list-group-item\"><a href=".$l["filename"].">".$l["title"]."</a><br>"
         ."".mb_substr( $l["body"] , 0 , 128 , "utf-8")."...</li>";
-        $title_list.="<p><a href=".$l["filename"].">".$l["title"]."</a><br>";
+        $title_list.="<p><a href=".$l["filename"].">".date("m/d",$l["time"])."_".$l["title"]."</a><br>";
     }
     $b=mb_ereg_replace("{{list}}" , $list , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
