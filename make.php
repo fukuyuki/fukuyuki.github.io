@@ -29,9 +29,13 @@ function make_blog(){
     array_multisort($sort, SORT_DESC , $posts_list);
     
     foreach( $posts_list as $l ){
-        $list.="<li class=\"list-group-item\"><a href=".$l["filename"].">".$l["title"]."(".date("Y/m/d",$l["date"]).")</a><br>"
+        $list.="<li class=\"list-group-item\"><a href=".$l["filename"].">".$l["title"]
+        ."(".date("Y/m/d",$l["date"]).")"
+        ."</a><br>"
         ."".mb_substr( $l["body"] , 0 , 128 , "utf-8")."...</li>";
-        $title_list.="<p><a href=".$l["filename"].">".date("m/d",$l["date"])."_".$l["title"]."</a><br>";
+        $title_list.="<p><a href=".$l["filename"].">"
+        ."(".date("Y/m/d",$l["date"]).")"
+        ."_".$l["title"]."</a><br>";
     }
     $b=mb_ereg_replace("{{list}}" , $list , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
