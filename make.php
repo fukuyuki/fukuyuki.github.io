@@ -21,7 +21,7 @@ function make_blog(){
     ( false===($b=file_get_contents( "template_index.html")))? die("can not read template") : 1;
     
     foreach ((array) $posts_list as $key => $value) {
-        $sort[$key] = $value['track_num'];
+        $sort[$key] = $value['date'];
     }
     array_multisort($sort, SORT_ASC, $posts_list);
     
