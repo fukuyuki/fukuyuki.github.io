@@ -9,12 +9,22 @@ function newpost(){
     file_put_contents( "./posts/".date("YmdHi").".txt" , "TITLE\nBODYBODYBODYBODYBODYBODYBODY");
 }
 
+function make_small_html( $s ){
+    return str_replace(array("\t" , "\r" , "\n" , "     ") ,"" ,  $b );
+}
+
 function make_blog(){
     global $blogname;
     $posts_list = read_post_entry();
     $index="";
     $title_list="";
     ( false===($b=file_get_contents( "template_index.html")))? die("can not read template") : 1;
+    
+    foreach ((array) $posts_list as $key => $value) {
+        $sort[$key] = $value['track_num'];
+    }
+    array_multisort($sort, SORT_ASC, $posts_list);
+    
     foreach( $posts_list as $l ){
         $list.="<li class=\"list-group-item\"><a href=".$l["filename"].">".$l["title"]."</a><br>"
         ."".mb_substr( $l["body"] , 0 , 128 , "utf-8")."...</li>";
@@ -28,9 +38,8 @@ function make_blog(){
     foreach( $posts_list as $l ){
         ( false===($b=file_get_contents(  $l["filename"])))? die("can not read template") : 1;
         $b=mb_ereg_replace("{{list}}" , $title_list , $b );
-        file_put_contents( $l["filename"] , str_replace(array("\t" , "\r" , "\n" ) ,"" ,  $b )  );
+        file_put_contents( $l["filename"] , make_small_html( $b )  );
     }
-
 }
 
 function read_post_entry(){
@@ -71,14 +80,15 @@ function makehtml( $fn ){
     }
 
     $b=mb_ereg_replace("{{title}}" , $title , $b );
-    $b=mb_ereg_replace("{{date}}" , date("Y/m/d H:i" , filemtime( $fn2 )) , $b );
+    $b=mb_ereg_replace("{{date}}" , date("Y/m/d H:i" , $date=filemtime( $fn2 )) , $b );
     $b=mb_ereg_replace("{{body}}" , $body , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     file_put_contents( $html_fn , $b );
     return array(
         "filename"=>$html_fn,
         "title"=>$title,
-        "body"=>$body
+        "body"=>$body,
+        "date"=>$date
         );
 }
 
