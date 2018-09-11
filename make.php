@@ -24,7 +24,7 @@ function make_blog(){
         var_dump( $value );
         $sort[$key] = $value['date'];
     }
-    die();
+    //die();
     
     array_multisort($sort, SORT_ASC, $posts_list);
     
