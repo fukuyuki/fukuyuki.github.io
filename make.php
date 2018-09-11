@@ -26,7 +26,7 @@ function make_blog(){
     }
     //die();
     
-    array_multisort($sort, SORT_ASC, $posts_list);
+    array_multisort($sort, SORT_DESC , $posts_list);
     
     foreach( $posts_list as $l ){
         $list.="<li class=\"list-group-item\"><a href=".$l["filename"].">".$l["title"]."</a><br>"
