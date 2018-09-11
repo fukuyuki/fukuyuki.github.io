@@ -103,7 +103,7 @@ function main(){
     }
     make_blog();
     system("git config --global credential.helper store ;"
-        ."git add *.html *.php ;"
+        ."git add *.html *.php ./posts/*.txt;"
         ."git commit -m \"hello\";"
         ."git push"
     );
