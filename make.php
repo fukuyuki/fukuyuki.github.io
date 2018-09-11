@@ -21,7 +21,6 @@ function make_blog(){
         $title_list.="<p><a href=".$l["filename"].">".$l["title"]."</a><br>";
     }
     $b=mb_ereg_replace("{{list}}" , $list , $b );
-
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     $b=mb_ereg_replace("{{title}}" , $blogname , $b );
     file_put_contents("index.html" , trim( $b ));
@@ -29,7 +28,7 @@ function make_blog(){
     foreach( $posts_list as $l ){
         ( false===($b=file_get_contents(  $l["filename"])))? die("can not read template") : 1;
         $b=mb_ereg_replace("{{list}}" , $title_list , $b );
-        file_put_contents( $l["filename"] , trim( $b ) );
+        file_put_contents( $l["filename"] , str_replace(array("\t" , "\r" , "\n" ," ") ,"" ) , $b  );
     }
 
 }
@@ -46,6 +45,7 @@ function read_post_entry(){
         }
     }
     $d->close();
+    //post_list を日付でソート。
     return $post_list;
 }
 
