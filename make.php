@@ -32,7 +32,7 @@ function make_blog(){
         $list.="<li class=\"list-group-item\"><a href=".$l["filename"].">".$l["title"]
         ."(".date("Y/m/d",$l["date"]).")"
         ."</a><br>"
-        ."".mb_substr( $l["body"] , 0 , 128 , "utf-8")."...</li>";
+        ."".strip_tags (mb_substr( $l["body"] , 0 , 128 , "utf-8"))."...</li>";
         $title_list.="<p><a href=".$l["filename"].">"
         .$l["title"]
         ." (".date("Y/m/d",$l["date"]).")"
