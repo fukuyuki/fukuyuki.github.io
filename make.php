@@ -41,6 +41,7 @@ function make_blog(){
     $b=mb_ereg_replace("{{list}}" , $list , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     $b=mb_ereg_replace("{{title}}" , $blogname , $b );
+
     file_put_contents("index.html" , make_small_html( $b ));
 
     foreach( $posts_list as $l ){
@@ -90,6 +91,8 @@ function makehtml( $fn ){
     $b=mb_ereg_replace("{{date}}" , date("Y/m/d H:i" , $date=filemtime( $fn2 )) , $b );
     $b=mb_ereg_replace("{{body}}" , $body , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
+    $b=mb_ereg_replace("{{url}}" , "https://fukuyuki.github.io/".$html_fn , $b );
+
     file_put_contents( $html_fn , $b );
     return array(
         "filename"=>$html_fn,
