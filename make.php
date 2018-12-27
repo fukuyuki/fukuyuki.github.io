@@ -2,7 +2,7 @@
 //TODO
 //UPDATEをつける
 //各記事にインデックスをつける。
-$blogname="ふくゆきブログ(再)";
+$blogname="ふくゆきブログ(再:高速表示)";
 $blogurl="";
 
 date_default_timezone_set('Asia/Tokyo');
