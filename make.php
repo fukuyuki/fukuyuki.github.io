@@ -43,7 +43,7 @@ function make_blog(){
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     $b=mb_ereg_replace("{{title}}" , $blogname , $b );
 
-    file_put_contents("index.html" , make_small_html( $b ));
+    file_put_contents("index.html" , /*make_small_html*/( $b ));
 
     foreach( $posts_list as $l ){
         ( false===($b=file_get_contents(  $l["filename"])))? die("can not read template") : 1;
