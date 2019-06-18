@@ -64,7 +64,7 @@ function read_post_entry(){
         }
     }
     $d->close();
-	var_dump( $post_list );
+	//var_dump( $post_list );
     return $post_list;
 }
 
