@@ -45,8 +45,10 @@ function make_blog(){
 	echo "\nb[45]=".substr( $b , 0 , 100 )."\n";
 
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
+	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";
+
     $b=mb_ereg_replace("{{title}}" , $blogname , $b );
-	echo "\nb[47]=".substr( $b , 0 , 100 )."\n";
+	echo "\nb[51]=".substr( $b , 0 , 100 )."\n";
 
     file_put_contents("index.html" , /*make_small_html*/( $b ));
 
