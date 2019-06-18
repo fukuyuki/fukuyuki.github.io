@@ -2,7 +2,7 @@
 //TODO
 //UPDATEをつける
 //各記事にインデックスをつける。
-$blogname="ふくゆきブログ(再:高速表示)";
+$blogname="ふくゆきブログ";
 $blogurl="";
 
 date_default_timezone_set('Asia/Tokyo');
@@ -125,7 +125,7 @@ function main(){
     }
     make_blog();
     system("git config --global credential.helper store ;"
-        ."git add *.html ads.txt *.php ./posts/*.txt;"
+        ."git add *.html *.php ./posts/*.txt;"
         ."git commit -m \"hello\";"
         ."git push -f"
     );
