@@ -42,6 +42,8 @@ function make_blog(){
 	echo "\nb[42]=".substr( $b , 0 , 100 )."\n";
 
     $b=mb_ereg_replace("{{list}}" , $list , $b );
+	echo "\nb[45]=".substr( $b , 0 , 100 )."\n";
+
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     $b=mb_ereg_replace("{{title}}" , $blogname , $b );
 	echo "\nb[47]=".substr( $b , 0 , 100 )."\n";
