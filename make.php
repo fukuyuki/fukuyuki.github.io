@@ -49,7 +49,7 @@ function make_blog(){
 	/*$b=str_replace("{{blogname}}" , $blogname , $b );
 	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";*/
 
-    $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
+    $b=mb_ereg_replace("{{blogname}}" , mb_convert_encoding($blogname  ,"utf-8" ) , $b );
 	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";
 
     /*$b=str_replace("{{title}}" , $blogname , $b );
