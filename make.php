@@ -46,11 +46,11 @@ function make_blog(){
     $b=mb_ereg_replace("{{list}}" , $list , $b );
 	echo "\nb[45]=".substr( $b , 0 , 100 )."\n";
 	
-	/*$b=str_replace("{{blogname}}" , $blogname , $b );
-	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";*/
-
-    $b=mb_ereg_replace("{{blogname}}" , mb_convert_encoding($blogname  ,"utf-8" ) , $b );
+	$b=str_replace("{{blogname}}" , mb_convert_encoding( $blogname  , "utf-8" ), $b );
 	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";
+
+    /*$b=mb_ereg_replace("{{blogname}}" , mb_convert_encoding($blogname  ,"utf-8" ) , $b );
+	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";*/
 
     /*$b=str_replace("{{title}}" , $blogname , $b );
 	echo "\nb[51]=".substr( $b , 0 , 100 )."\n";*/
