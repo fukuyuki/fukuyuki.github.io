@@ -42,6 +42,7 @@ function make_blog(){
     $b=mb_ereg_replace("{{list}}" , $list , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     $b=mb_ereg_replace("{{title}}" , $blogname , $b );
+	echo substr( $b , 0 , 100 )."\n";
 
     file_put_contents("index.html" , /*make_small_html*/( $b ));
 
