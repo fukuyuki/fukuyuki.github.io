@@ -40,19 +40,20 @@ function make_blog(){
         ."</a><br>";
     }
 	echo "\nb[42]=".substr( $b , 0 , 100 )."\n";
+	mb_internal_encoding("UTF-8");
+	mb_regex_encoding("UTF-8");
 
     $b=mb_ereg_replace("{{list}}" , $list , $b );
 	echo "\nb[45]=".substr( $b , 0 , 100 )."\n";
 	
-
-	$b=str_replace("{{blogname}}" , $blogname , $b );
-	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";
-
-    /*$b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
+	/*$b=str_replace("{{blogname}}" , $blogname , $b );
 	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";*/
 
-    $b=str_replace("{{title}}" , $blogname , $b );
-	echo "\nb[51]=".substr( $b , 0 , 100 )."\n";
+    $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
+	echo "\nb[48]=".substr( $b , 0 , 100 )."\n";
+
+    /*$b=str_replace("{{title}}" , $blogname , $b );
+	echo "\nb[51]=".substr( $b , 0 , 100 )."\n";*/
 
     file_put_contents("index.html" , /*make_small_html*/( $b ));
 
