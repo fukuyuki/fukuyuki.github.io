@@ -43,7 +43,7 @@ function make_blog(){
 	mb_internal_encoding("UTF-8");
 	mb_regex_encoding("UTF-8");
 
-    $b=mb_ereg_replace("{{list}}" , $list , $b );
+    $b=mb_ereg_replace("{{list}}" , mb_convert_encoding( $list , "utf-8") , $b );
 	echo "\nb[45]=".substr( $b , 0 , 100 )."\n";
 	
 	$b=str_replace("{{blogname}}" , mb_convert_encoding( $blogname  , "utf-8" ), $b );
