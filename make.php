@@ -39,12 +39,12 @@ function make_blog(){
         ." (".date("Y/m/d",$l["date"]).")"
         ."</a><br>";
     }
-	echo "b[42]=".substr( $b , 0 , 100 )."\n";
+	echo "\nb[42]=".substr( $b , 0 , 100 )."\n";
 
     $b=mb_ereg_replace("{{list}}" , $list , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
     $b=mb_ereg_replace("{{title}}" , $blogname , $b );
-	echo "b=".substr( $b , 0 , 100 )."\n";
+	echo "\nb[47]=".substr( $b , 0 , 100 )."\n";
 
     file_put_contents("index.html" , /*make_small_html*/( $b ));
 
