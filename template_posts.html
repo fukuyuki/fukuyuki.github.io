@@ -3,6 +3,23 @@
 	<meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<title>{{title}} |{{blogname}}</title>
+
+<!-- ※基本共通設定 -->
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
+<meta property="og:title" content="{{title}}" />
+<meta property="og:type" content="artcle" />
+<meta property="og:url" content="{{url}}" />
+<meta property="og:image" content="https://s3-ap-northeast-1.amazonaws.com/valu-prod/v0edOHWC9Y4XSwa0FSpbKYFqXIoeyr.jpg" />
+<meta property="og:site_name" content="{{blogname}}" />
+<meta property="og:description" content="{{title}}" />
+
+<!-- Facebook用設定 -->
+<meta property="fb:app_id" content="2145074582407951" />
+
+
+<!-- ※Twitter共通設定 -->
+<meta name="twitter:card" content="summary_large_image" />
+
 <body>
 	<nav class="navbar navbar-inverse">
 		<div class="container">
