@@ -102,6 +102,7 @@ function makehtml( $fn ){
     }
 
     $b=mb_ereg_replace("{{title}}" , $title , $b );
+    $b=mb_ereg_replace("{{entitle}}" , urlencode($title) , $b );
     $b=mb_ereg_replace("{{date}}" , date("Y/m/d H:i" , $date=filemtime( $fn2 )) , $b );
     $b=mb_ereg_replace("{{body}}" , $body , $b );
     $b=mb_ereg_replace("{{blogname}}" , $blogname , $b );
