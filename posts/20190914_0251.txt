@@ -1,0 +1,11 @@
+古い友人にWeb界隈でFirebaseが熱いと騒がれている理由を教えてみる。
+
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+
+<pre><code class="prettyprint">
+.elem {
+  font-size: 16px;
+}
+</code></pre>
+
