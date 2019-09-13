@@ -1,6 +1,6 @@
 古い友人にWeb界隈でFirebaseが熱いと騒がれている理由を教えてみる。
 
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
 古い友人にWeb界隈でFirebaseが熱いと騒がれている理由を教えてみる。
 
@@ -13,7 +13,7 @@ htmlでpostして、アプリサーバでpostデータ読んで、create table�
 
 それが、HTML書くだけになったんや。
 
-<pre><code class="prettyprint">
+<pre class="prettyprint lang-js">
 
 <!DOCTYPE html>
 <script src="//www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
@@ -23,7 +23,7 @@ htmlでpostして、アプリサーバでpostデータ読んで、create table�
     <button onClick='firebase.database().ref("user")
         .add( { name : "ふくゆき" , email : "murakami@email.com"  , company : "株式会社クレイジーワークス" })'>
         データ書く</button>
-</code></pre>
+</pre>
 
 
 これ書くだけや。DBサーバもたてへんでええし、niginxのめんどい設定もいらんし、Apacheのhttp.confさわったりもない。
