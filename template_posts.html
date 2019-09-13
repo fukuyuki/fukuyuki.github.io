@@ -1,8 +1,9 @@
 <html lang="en">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	<title>{{title}} |{{blogname}}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<title>{{title}} |{{blogname}}</title>
 
 <!-- ※基本共通設定 -->
 <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#">
@@ -21,89 +22,89 @@
 <meta name="twitter:card" content="summary_large_image" />
 
 <body>
-	<nav class="navbar navbar-inverse">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" hreh="./">{{blogname}}</a>
-			</div>
-			<ul class="nav navbar-nav">
-			</ul>
-		</div>
-	</nav>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-10">
-				<h3>{{title}}</h3>
-			</div>
-			<div class="col-md-10">
-				<p><a href="https://twitter.com/fukuyuki/">@fukuyuki</a> {{date}} </p>
-			</div>
-		</div>
-		
-		<div class="row">
-			<div class="col-sm-12" style="display:block;">
-				<p>
-				<div style="float:left;width:25%;background-color:#3b5998;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="http://www.facebook.com/share.php?u={{url}}" rel="nofollow" target="_blank"><b>facebook</b></a>
-				</div>
-				<div style="float:left;width:25%;background-color:#00aced;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="https://twitter.com/intent/tweet?url={{url}}&text={{entitle}}&via=fukuyuki"><b>twitter</b></a>
-				</div>
-				<div style="float:left;width:25%;background-color:#5279E7;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="http://b.hatena.ne.jp/add?mode=confirm&url={{url}}&title={{title}}{{subtitle}}" target="_blank" rel="nofollow"><b>はてな</b></a>
-				</div>
-				<div style="float:left;width:25%;background-color:#5ae628;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="http://line.me/R/msg/text/?{{url}}"><b>LINE</b></a>
-				</div>
-				</p>
-			</div>
-		</div>
+<nav class="navbar navbar-inverse">
+<div class="container">
+<div class="navbar-header">
+<a class="navbar-brand" hreh="./">{{blogname}}</a>
+</div>
+<ul class="nav navbar-nav">
+</ul>
+</div>
+</nav>
+<div class="container">
+<div class="row">
+<div class="col-md-10">
+<h3>{{title}}</h3>
+</div>
+<div class="col-md-10">
+<p><a href="https://twitter.com/fukuyuki/">@fukuyuki</a> {{date}} </p>
+</div>
+</div>
 
-		<div class="row">
-			<div class="col-md-10">
-				{{body}}
-			</div>
-		</div>
-		
-		<div class="row">
-			<div class="col-sm-12">
-				<p>
+<div class="row">
+<div class="col-sm-12" style="display:block;">
+<p>
+<div style="float:left;width:25%;background-color:#3b5998;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="http://www.facebook.com/share.php?u={{url}}" rel="nofollow" target="_blank"><b>facebook</b></a>
+</div>
+<div style="float:left;width:25%;background-color:#00aced;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="https://twitter.com/intent/tweet?url={{url}}&text={{entitle}}&via=fukuyuki"><b>twitter</b></a>
+</div>
+<div style="float:left;width:25%;background-color:#5279E7;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="http://b.hatena.ne.jp/add?mode=confirm&url={{url}}&title={{title}}{{subtitle}}" target="_blank" rel="nofollow"><b>はてな</b></a>
+</div>
+<div style="float:left;width:25%;background-color:#5ae628;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="http://line.me/R/msg/text/?{{url}}"><b>LINE</b></a>
+</div>
+</p>
+</div>
+</div>
 
-				<div style="float:left;width:25%;background-color:#3b5998;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="http://www.facebook.com/share.php?u={{url}}" rel="nofollow" target="_blank"><b>facebook</b></a>
-				</div>
-				<div style="float:left;width:25%;background-color:#00aced;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="https://twitter.com/share?url={{url}}"><b>twitter</b></a>
-				</div>
-				<div style="float:left;width:25%;background-color:#5279E7;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="http://b.hatena.ne.jp/add?mode=confirm&url={{url}}&title={{title}}{{subtitle}}" target="_blank" rel="nofollow"><b>はてな</b></a>
-				</div>
-				<div style="float:left;width:25%;background-color:#5ae628;padding:0.4%; text-align: center;">
-					<a style="color:#fff;" href="http://line.me/R/msg/text/?{{url}}"><b>LINE</b></a>
-				</div>
-				</p>
-			</div>
-		</div>
+<div class="row">
+<div class="col-md-10">
+{{body}}
+</div>
+</div>
 
-    </div>
-	<hr style="border:1px solid #eee;"/>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-10">
-			{{list}}
-			</div>
-		</div>
-	</div>
-	<hr style="border:1px solid #eee;"/>
-	<center>
-	<a href="./">{{blogname}}</a>
-	</center>
+<div class="row">
+<div class="col-sm-12">
+<p>
+
+<div style="float:left;width:25%;background-color:#3b5998;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="http://www.facebook.com/share.php?u={{url}}" rel="nofollow" target="_blank"><b>facebook</b></a>
+</div>
+<div style="float:left;width:25%;background-color:#00aced;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="https://twitter.com/share?url={{url}}"><b>twitter</b></a>
+</div>
+<div style="float:left;width:25%;background-color:#5279E7;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="http://b.hatena.ne.jp/add?mode=confirm&url={{url}}&title={{title}}{{subtitle}}" target="_blank" rel="nofollow"><b>はてな</b></a>
+</div>
+<div style="float:left;width:25%;background-color:#5ae628;padding:0.4%; text-align: center;">
+<a style="color:#fff;" href="http://line.me/R/msg/text/?{{url}}"><b>LINE</b></a>
+</div>
+</p>
+</div>
+</div>
+
+</div>
+<hr style="border:1px solid #eee;"/>
+<div class="container">
+<div class="row">
+<div class="col-md-10">
+{{list}}
+</div>
+</div>
+</div>
+<hr style="border:1px solid #eee;"/>
+<center>
+<a href="./">{{blogname}}</a>
+</center>
 
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
-     (adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: "ca-pub-3850197898480094",
-          enable_page_level_ads: true
-     });
+(adsbygoogle = window.adsbygoogle || []).push({
+google_ad_client: "ca-pub-3850197898480094",
+enable_page_level_ads: true
+});
 </script>
 
