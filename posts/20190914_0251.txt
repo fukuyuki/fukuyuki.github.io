@@ -2,6 +2,32 @@
 
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
+古い友人にWeb界隈でFirebaseが熱いと騒がれている理由を教えてみる。
+
+最近、古い友人がfirebaseで騒いでいるのがわからん。firebase昔からあるやんと言われた。
+個人的にweb屋としてfirebaseで感動したのはクライアント側(HTML+JS)だけの実装で、DBもユーザ認証もSNS認証もSMS認証(電話だ！)も機械学習も実装できる。サーバ側やインフラ側の設定がいらない。最悪、ホームページビルダーでSNSやWebアプリを作ったりもできる。ホームページビルダーってまだあるんか知らんけど。
+アプリ屋さんだけで騒いでいたfirebaseの熱が一番多いデベロッパーであるWeb屋にも来たので、大騒ぎしているんだと思う。
+
+まぁ、なんや、今まで、さくらVPSとか、Conohaとか、EC2とか、Webとデータベースでなんかしたいと思ったら、サーバにApacheやnginxやruby/php/etc...とmysqlとかポスグレ入れて、クライアント(HTML)とアプリサーバ(php/ruby/etc)とDBをうんたら、かんたらしてたわけやん。
+htmlでpostして、アプリサーバでpostデータ読んで、create tableして、insertして、
+
+それが、HTML書くだけになったんや。
+
+<pre><code class="prettyprint">
+
+<!DOCTYPE html>
+<script src="//www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+<script src="//www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
+<script src="//__/firebase/init.js"></script>
+    <!-- データベースにデータを書く-->
+    <button onClick='firebase.database().ref("user")
+        .add( { name : "ふくゆき" , email : "murakami@email.com"  , company : "株式会社クレイジーワークス" })'>
+        データ書く</button>
+</code></pre>
+
+
+これ書くだけや。DBサーバもたてへんでええし、niginxのめんどい設定もいらんし、Apacheのhttp.confさわったりもない。
+
 
 <pre><code class="prettyprint">
 .elem {
