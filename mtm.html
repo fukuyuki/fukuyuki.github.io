@@ -14,7 +14,7 @@
       "https://www.google.com/search?q=site%3Aci.nii.ac.jp+" + encodeURIComponent( q ),
       "https://www.google.com/search?q=filetype%3Apdf+" + encodeURIComponent( q ),
       "https://www.google.com/search?q=" + encodeURIComponent( q ) + "-%E3%81%84%E3%81%8B%E3%81%8C%E3%81%A7%E3%81%97%E3%81%9F%E3%81%8B-%E8%AA%BF%E3%81%B9%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F+-%E3%82%B6%E3%83%83%E3%82%AF%E3%83%AA%E8%A8%80%E3%81%86%E3%81%A8",
-      "https://www.google.com/search?q=site%3Aac.jp+OR+site%3Ago.jp+OR+site%3Aor.jp+" + encodeURIComponent( q ),
+      "https://www.google.com/search?q=site%3Aac.jp+OR+site%3Ago.jp+OR+site%3Alg.jp+" + encodeURIComponent( q ),
     ]
     location.href = url[document.getElementById("type").value];
   }
@@ -22,14 +22,14 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-10" style="display:block;">
-      <h1 style="font-size:36px;">まともなことしか出ない検索</h1>
+      <h1 style="font-size:36px;">まとも検索</h1>
       <p>比較的まともなことしか検索結果に出てきません。まとめサイトなどは出てきません。</p>
       <label class="label"><strong>検索ワード</strong></label>
       <input class="form-control" type=text id="q" value="新型コロナウィルス">
       <p>
         <label class="label"><strong>オプション</strong></label>
         <select class="form-control" id="type" name="medtype">
-          <option value=4>公的機関に限定: ac.jp / or.jp / go.jp</option>
+          <option value=4>公的機関に限定: ac.jp / lg.jp / go.jp</option>
           <option value=0>医療情報に限定：大学・大学病院(ac.jp)のみ</option>
           <option value=1>国内論文限定：ci.nii.ac.jpに限定</option>
           <option value=2>pdfのみ：スパム業者はpdfを使わないので、正確な情報が多いがヒットする件数は減ります。</option>
