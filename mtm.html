@@ -3,7 +3,7 @@
 <meta http-equiv="Pragma" content="no-cache" comment="jsキャッシュさせない。">
 <meta charset="utf-8">
 <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
-<title>まともなことしか出ない検索</title>
+<title>まとも検索</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
   integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
@@ -23,9 +23,9 @@
   <div class="row">
     <div class="col-sm-10" style="display:block;">
       <h1 style="font-size:36px;">まとも検索</h1>
-      <p>比較的まともなことしか検索結果に出てきません。まとめサイトなどは出てきません。</p>
+      <p>比較的まともなことしか検索結果に出てきません。まとめサイトなどは出てきません。エッチな言葉で検索しても、まともなことしか出ません。</p>
       <label class="label"><strong>検索ワード</strong></label>
-      <input class="form-control" type=text id="q" value="新型コロナウィルス">
+      <input class="form-control" type=text id="q" value="エッチな画像">
       <p>
         <label class="label"><strong>オプション</strong></label>
         <select class="form-control" id="type" name="medtype">
@@ -33,7 +33,9 @@
           <option value=0>医療情報に限定：大学・大学病院(ac.jp)のみ</option>
           <option value=1>国内論文限定：ci.nii.ac.jpに限定</option>
           <option value=2>pdfのみ：スパム業者はpdfを使わないので、正確な情報が多いがヒットする件数は減ります。</option>
+          <!--
           <option value=3>[いかがだったでしょうか？]を除外</option>
+          -->
         </select>
       </p>
       <button class="btn btn-primary" onClick="onSearchButtonClick()">検索</button>
