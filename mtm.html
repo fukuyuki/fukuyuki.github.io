@@ -1,51 +1,48 @@
-
 <html lang="ja">
-<meta http-equiv="Pragma" content="no-cache" comment="jsキャッシュさせない。">
 <meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
 <title>まとも検索</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script>
-  function onSearchButtonClick() {
-    var q = document.getElementById("q").value;
-    url = [
-      "https://www.google.com/search?q=site%3Aac.jp+" + encodeURIComponent( q ),
-      "https://www.google.com/search?q=site%3Aci.nii.ac.jp+" + encodeURIComponent( q ),
-      "https://www.google.com/search?q=filetype%3Apdf+" + encodeURIComponent( q ),
-      "https://www.google.com/search?q=" + encodeURIComponent( q ) + "-%E3%81%84%E3%81%8B%E3%81%8C%E3%81%A7%E3%81%97%E3%81%9F%E3%81%8B-%E8%AA%BF%E3%81%B9%E3%81%A6%E3%81%BF%E3%81%BE%E3%81%97%E3%81%9F+-%E3%82%B6%E3%83%83%E3%82%AF%E3%83%AA%E8%A8%80%E3%81%86%E3%81%A8",
-      "https://www.google.com/search?q=site%3Aac.jp+OR+site%3Ago.jp+OR+site%3Alg.jp+" + encodeURIComponent( q ),
-    ]
-    location.href = url[document.getElementById("type").value];
-  }
-</script>
-<div class="container">
-  <div class="row">
-    <div class="col-sm-10" style="display:block;">
-      <h1 style="font-size:36px;">まとも検索</h1>
-      <p>比較的まともなことしか検索結果に出てきません。まとめサイトなどは出てきません。エッチな言葉で検索しても、まともなことしか出ません。</p>
-      <label class="label"><strong>検索ワード</strong></label>
-      <input class="form-control" type=text id="q" value="エッチな画像">
-      <p>
-        <label class="label"><strong>オプション</strong></label>
-        <select class="form-control" id="type" name="medtype">
-          <option value=4>公的機関に限定: ac.jp / lg.jp / go.jp</option>
-          <option value=0>医療情報に限定：大学・大学病院(ac.jp)のみ</option>
-          <option value=1>国内論文限定：ci.nii.ac.jpに限定</option>
-          <option value=2>pdfのみ：スパム業者はpdfを使わないので、正確な情報が多いがヒットする件数は減ります。</option>
-          <!--
-          <option value=3>[いかがだったでしょうか？]を除外</option>
-          -->
+<header>
+    <h2>まとも検索</h2>
+</header>
+<main>
+    <p>「Google検索が死んだ」がバズったので真面目な結果しか出ない検索サイトをつくりました。まとめサイトなどは出ません。</p>
+    <label><strong>検索ワード</strong></label>
+    <input type=text id="q" value="エッチな画像">
+    <p>
+        <label><strong>オプション</strong></label>
+        <select id="type" name="medtype">
+            <option value="https://www.google.com/search?q=site%3Aac.jp+OR+site%3Ago.jp+OR+site%3Alg.jp+">公的機関に限定: ac.jp
+                / lg.jp / go.jp</option>
+            <option value="https://www.google.com/search?q=site%3Aac.jp+">医療情報に限定：大学・大学病院(ac.jp)のみ</option>
+            <option value="https://www.google.com/search?q=site%3Aci.nii.ac.jp+">国内論文限定：ci.nii.ac.jpに限定</option>
+            <option value="https://www.google.com/search?q=filetype%3Apdf+">pdfのみ：正確な情報が多い。</option>
+            <option value="https://www.google.com/search?q=site%3Apubmed.ncbi.nlm.nih.gov+">
+                英文論文限定：pubmed.ncbi.nlm.nih.govに限定</option>
         </select>
-      </p>
-      <button class="btn btn-primary" onClick="onSearchButtonClick()">検索</button>
-      <hr style="border:1px solid #888;">
-      <p>
-        家族が病気のとき、医療情報を検索しても、信ぴょう性が薄い広告サイトやまとめサイトとばっかりなので腹が立って作った。特に子供関係の情報がひどい。
-        PCだと検索オプションの指定は楽だけど、スマホだといろいろ面倒くさいのでドロップダウンにした。個人的には切迫で頸管の長さの統計の論文とか、夜泣きの論文とか、
-        いろいろ勉強になった。ただ、論文や役所のパワポは専門的で読みにくい情報が多いので、難しい文章や長い文章を読むのが苦手な人はオススメしません。
-      </p>
-    </div>
-  </div>
-
-
+    </p>
+    <button
+        onClick='location.href = document.getElementById("type").value+encodeURIComponent(document.getElementById("q").value);'>検索</button>
+    <hr>
+    <details>
+        <summary>なんだこれ？</summary>
+        <ul>
+            <li>
+                単純に検索オプションをつけてGoogle検索するだけです。検索オプションってスマホだと面倒くさいよね。
+            </li>
+            <li>
+                医療や育児の情報は精度が高い情報が出ますが、医療機関や政府情報や論文が多く、文章を読むのが苦手な人には向きません。
+            </li>
+            <li>エッチな情報やダイエット情報はかなり精度が低いです。</li>
+            <li>家族が病気のとき、医療情報を検索しても、信ぴょう性が薄い広告サイトやまとめサイトとばっかりなので腹が立って作った。
+                特に子供関係の情報がひどい。</li>
+            <li>個人的には切迫で頸管の長さの統計の論文とか、子供の夜泣きと気温と明度の関係の論文とか、いろいろ勉強になった。</li>
+            <li>論文を検索すると、補正下着とかサウナとかベジタリアンとかダイエットを真面目に研究して論文書いている人がいることに驚く。
+                まとめサイトよりマシだけど、適当な論文も多い。</li>
+            <li>検索オプションつけると、リスティングめちゃくちゃ減るので検索結果が見やすいよね。</li>
+        </ul>
+    </details>
+    <hr>
+    @fukuyuki
+</main>
