@@ -45,4 +45,14 @@
     </details>
     <hr>
     @fukuyuki
+    <script>
+        const urlParams = location.search || ""
+        const params = new URLSearchParams(urlParams);
+        const searchText = params.get("s")
+        if (searchText) {
+            const TextInput = document.getElementById("q");
+            TextInput.value = searchText;
+        }
+    </script>
+
 </main>
