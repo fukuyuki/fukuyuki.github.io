@@ -45,4 +45,18 @@
     </details>
     <hr>
     @fukuyuki
+    <script>
+        const urlParams = location.search || ""
+        const params = new URLSearchParams(urlParams);
+        const searchText = params.get("s")
+        if (searchText) {
+            const TextInput = document.getElementById("q");
+            console.log(TextInput.value);
+            TextInput.value = searchText;
+            console.log(TextInput.value);
+
+        }
+        console.log("now hash is  : %o",);
+    </script>
+
 </main>
