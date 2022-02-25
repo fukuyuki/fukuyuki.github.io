@@ -3,12 +3,23 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <body
     onload="var t = new Date();t.setDate(t.getDate());document.getElementById('d').value = t.getFullYear()+('0' + (t.getMonth() + 1)).slice(-2)+('0' + t.getDate()).slice(-2) + '1300会議'">
     <main>
         <h1>爆速予定追加マン</h1>
         <input id=d style="width:100%" onkeydown="( window.event.keyCode == 13 )?make():false;">
         <button onClick="make()">カレンダーに追加</button>
+
+        <script async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3850197898480094"
+            crossorigin="anonymous"></script>
+        <!-- add-gcal -->
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3850197898480094"
+            data-ad-slot="3017991522" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
         <ul>
             <li><b>目的：</b>グーグルカレンダーを簡単に追加します。</li>
             <li><b>例:</b> 202103141500会議 =2021年3月14日15持00分に「会議」の予定を追加というGoogleカレンダーにリダイレクトします。</li>
@@ -27,10 +38,10 @@
         </ul>
         <footer><a href="https://twitter.com/fukuyuki">@fukuyuki</a></footer>
         <script>
-            var make=()=>{
+            var make = () => {
                 var b = document.getElementById("d").value;
                 if (b.length > 11) {
-                    document.body.innerHTML="<h2>Please Wait...</h2>";
+                    document.body.innerHTML = "<h2>Please Wait...</h2>";
                     window.location.href = "http://www.google.com/calendar/event?action=TEMPLATE&"
                         + "text=" + b.substr(12) + "&"
                         + "details="
