@@ -1,0 +1,55 @@
+<html la=en>
+<title>爆速予定追加マン</title>
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<body
+    onload="var t = new Date();t.setDate(t.getDate());document.getElementById('d').value = t.getFullYear()+('0' + (t.getMonth() + 1)).slice(-2)+('0' + t.getDate()).slice(-2) + '1300会議'">
+    <main>
+        <h1>爆速予定追加マン</h1>
+        <input id=d style="width:100%" onkeydown="( window.event.keyCode == 13 )?make():false;">
+        <button onClick="make()">カレンダーに追加</button>
+        <ul>
+            <li><b>目的：</b>グーグルカレンダーを簡単に追加します。</li>
+            <li><b>例:</b> 202103141500会議 =2021年3月14日15持00分に「会議」の予定を追加というGoogleカレンダーにリダイレクトします。</li>
+            <li><b>凡例:</b> [西暦４桁][月２桁][日２桁][時2桁][分２桁][すること]</li>
+            <li><b>その他:</b>ホーム画面に追加したりするといいかも。</li>
+            <li><b>デフォルト値:</b>日付だけ本日です。時間は常に13時00分。項目は[会議]</li>
+            <li><b>スマホ</b> : 基本的にGoogleログイン済みのブラウザでないといちいちログイン画面がでる。SNSなどで開いた人は一度、
+                Goolgeアカウントでログイン済みのブラウザで開き直すことを推奨。</li>
+            <li>何時までとか、全日とかは指定できません。そんもうちやるかもだけど、個人使用なら一年つかってこれでよかった。</li>
+
+            <li>Google カレンダーのUIが超絶めんどうくさい。日時とすることメモるだけだろ？フォーム一個でいいだろ？細かいことしらん。
+                イライラする。何者にもなれない大人になってしまい、予定を追加するごときでこんなに時間とらされるしイライラする。
+            </li>
+            <li>データとか取ってない。単にリダイレクトしてるだけだ。ソース見たらわかるけど。</li>
+            <li>日付と時間に区切りがないから使いにくいという人は使わないでください。すぐ慣れます。</li>
+        </ul>
+        <footer><a href="https://twitter.com/fukuyuki">@fukuyuki</a></footer>
+        <script>
+            var make=()=>{
+                var b = document.getElementById("d").value;
+                if (b.length > 11) {
+                    document.body.innerHTML="<h2>Please Wait...</h2>";
+                    window.location.href = "http://www.google.com/calendar/event?action=TEMPLATE&"
+                        + "text=" + b.substr(12) + "&"
+                        + "details="
+                        + b.substr(12) + "&"
+                        + "dates="
+                        + b.substr(0, 4)//year
+                        + b.substr(4, 2)//mon
+                        + b.substr(6, 2)//dayn
+                        + "T"
+                        + b.substr(8, 2)//hour
+                        + b.substr(10, 2)//hour
+                        + "00/"
+                        + b.substr(0, 4)//year
+                        + b.substr(4, 2)//mon
+                        + b.substr(6, 2)//daymon
+                        + "T"
+                        + b.substr(8, 2)//hour
+                        + b.substr(10, 2)//hour
+                        + "00";
+                }
+            }
+        </script>
