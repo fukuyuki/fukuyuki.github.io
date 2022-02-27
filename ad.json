@@ -1,0 +1,19 @@
+{
+  "list": [
+    {
+      "title": "TITLE1",
+      "url": "https://yahoo.co.jp",
+      "price": "10000"
+    },
+    {
+      "title": "TITLE2",
+      "url": "https://yahoo.co.jp",
+      "price": "20000"
+    },
+    {
+      "title": "TITLE3",
+      "url": "https://yahoo.co.jp",
+      "price": "30000"
+    }
+  ]
+}
