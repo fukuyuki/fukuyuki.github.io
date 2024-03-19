@@ -1,94 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-    <title>自衛隊 東京大規模接種センター（東京センター）の予約が無理ゲーなので攻略法を書く(2021/08/02動作確認版)</title>
+    <link rel="stylesheet" href="s.css">
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-3850197898480094", enable_page_level_ads: true });</script>
+
+    <title>If you are AkiraToriyama</title>
 </head>
-
 <body>
-    <nav class="navbar navbar-inverse">
-        <div class="container">
-            <div class="navbar-header"><a class="navbar-brand">TEST自衛隊
-                    TEST東京大規模接種センター攻略法(2021/08/02動作確認版)</a></div>
-            <ul class="nav navbar-nav"></ul>
-        </div>
-    </nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10">
-                <h3>自衛隊 東京大規模接種センターの予約が無理ゲーなので攻略法を書く(2021/08/02動作確認版)</h3>
-            </div>
-            <div class="col-md-10">
-                <p>2021/08/03 13:43</p>
-                <p><img style="border:solid 1px #888;" src="https://scontent-nrt1-1.xx.fbcdn.net/v/t1.6435-9/225081212_10157746040937434_7526063554445135385_n.jpg?_nc_cat=102&ccb=1-3&_nc_sid=730e14&_nc_ohc=AOl_3zaWX4kAX9OqvL4&_nc_ht=scontent-nrt1-1.xx&oh=e32e4022771a5c88d307604ecc62e355&oe=6130144D" class="img-fluid" alt="Responsive image"></p>
-            </div>
-            <div class="col-md-10">
-                <h3>概要</h3>
-                <p>3-6日に一度、 東京自衛隊集団接種ワクチン会場では予約が18時から始まります。しかし一部の人にとっては予約が難しいのでその方法を書きます。
-                    <b>攻略法はひたすら待つ、リロードしない、ブラウザの戻るボタンを押さない！
-                        --「たけしの挑戦状」の宝の地図と同じです。--</b>サイトの仕様は適宜変わる。CAPTCHAでbot対策はされているので、多少のエンジニアでも人力で挑む方が良い。</p>
+    <h3>もし鳥山明なら:</h3>
+    <p>
+        <b>Birth_Year:</b>
+        <select id="yearSelect" onchange="redraw()"></select>
+        <b>Birth_Month:</b>
+        <select id="monthSelect" onchange="redraw()"></select>    
+    </p>
+    <img id="canvasImage" src="" alt="Canvas Image" >
+    <canvas id="myCanvas" width="540" height="320" style="display:none;"></canvas>
+    <script>
 
-                <p><b><font color=red>つぎは、8月9日（木）18時に予約開始です。</font></b></p>
-                
-                <h3>要約:</h3>
-                <p>(1)電源接続されたPCまたはMacでChrome系ブラウザで 指定された日時の18時に予約サイトを開く。<s>スマホ非推奨。</s>MacOSのsafari非推奨。<br>
-                (2021/08/06 追記)スマホとPC同時にできるなら同時遂行推奨です。18時より少し前でもつながることもあるとの情報もあります。僕はつながりませんでした。<br>
-                (2)「ただいま、サイトが大変混雑しております」と出るので待つ。50分かかることもある。<font color=red><b>絶対にリロードをしてはいけない。F5連打は死を意味する。</b></font><br>
-                (3)ログイン後、<font color=red><b>すごい勢いで残席が減るのでエラー多いが、エラーが出ても絶対にブラウザの戻るボタンを押してはいけない。残席が無くなる前に[会場一覧]を押せ！</b></font><br>
-        <font color=blue><b>接続数が限られるので、ログインできればトラブルなければ取れる。</font></b><br>
+var select = document.getElementById("yearSelect");
+        for (var year = 1933; year <= 2020; year++) {
+            var option = document.createElement("option");
+            option.value = year;
+            option.text = year;
+            if (year === 1980) {
+                option.selected = true; // 1980年を選択済みに設定
+            }
+            select.appendChild(option);
+        }
 
-                <h3>準備:</h3>
-                <p>(1)<b><s>スマホより</s>PCまたはMac推奨。ブラウザはできればChrome系。</b>たぶん、Firefoxでも可能。Safariは推奨しない。理由はSafariは電力消費が少ない分、タスク優先度が非常に落ちるから。電源接続推奨。
-                </p>
-                <p>(2)<b>スマホやタブレットしかない人はできる限り満充電にし、画面ロックをoffにし、すべての省電力設定をoff。</b><br>
-                    - iPhoneでは[設定]→[画面表示と明るさ]→[画面ロック]→なし<br>
-                    - androidの省電力は機種によっていろいろなので自分で頑張ろう。
-                </p>
-                <p>(3)要するに、<b>省電力や画面ロックやサスペンドやバックグラウンドタスクに弱い設計に見える。</b></p>
+var select = document.getElementById("monthSelect");
+        for (var month = 1; month <= 12; month++) {
+            var option = document.createElement("option");
+            option.value = month;
+            option.text = month + "月";
+            select.appendChild(option);
+        }
 
-                <h3>手順</h3>
+//redraw();
 
-                <p>(1)予約受付日の18時きっちりになったら下記のURLを開く。<br>
-                    <a href="https://www.vaccine.mrso.jp/sdftokyo/VisitNumbers/visitnoAuth/">https://www.vaccine.mrso.jp/sdftokyo/VisitNumbers/visitnoAuth/</a></p>
-                    <p>
+function redraw(){
+    var birth_year = 1980;
+    var birth_day = 1;
+    var sec=0;
 
-                    </p>
+    var birth_year = document.getElementById("yearSelect").value;
+    var birth_month = document.getElementById("monthSelect").value;
 
-                <p>(2)上記の画像のような「ただいま、サイトが大変混雑しております」と出たら、<strong>放置。20分でも30分でも60分でも放置。</strong>更新やリロードすると、待ち行列の後ろに回される可能性がある。
-                    <b>ぼくの場合、2021/08/02 18:01に接続して、18:35くらいにつながった。</b>オッサンにとっては「たけしの挑戦状」の宝の地図と同じである。一度、誘惑に負けてリロードしたら、惨敗した。
-                    一台は「ワクチンもうないよ」画面に飛ばされ、もう一台は待ち行列の最後に飛ばされて死んだ。
-                    待っている間に、<b>スマホがスリープしていたりスマホでSNSをしていたり、ウマ娘で遊んでいたり、バックグラウンドタスクにするとリダイレクトしない可能性がある。
-                    </b>そのため、PC/Macであることが推奨される。また、いきなりリダイレクトするのでPCでも画面ロックやスクリーンセーバーが稼働していると気づかないことがある。
-                    また、ノートパソコンで電源が接続されてないと、待っている間にサスペンドやハイバネーションすることもあるので、PCの電源をつなごう。
-                    予約が全部なくなったときは、残念でしたページにリダイレクトする。</p>
+    var sec=get_second_from_birth_to_current(birth_year, birth_month, birth_day); // 結果を出力
+    const toriyama_life=2174515200;
+    var percent = sec / toriyama_life;
+    var left_percent = (100 -Math.floor( percent*100 ));
+    var time = get_time_from_percent(percent);
+    draw_image( time.hour , time.minutes , left_percent , sec );
 
-                <p>(3)順番が来ると、自動的にログインページにリダイレクトする。接種券に記された情報を入力しログイン。順番が来ても、ゆっくりやっているとどんどん残席がリアルタイムでへっていくので早くログインする。</p>
+}
 
-                <p>(4)会場がA,B,Cの３つ出るが<strong>運だ。</strong><s>今はワクチンの数が少ないのでAが多い可能性が高い。</s>迷ってるとリアルタイムで残席がなくなるが表示はリアルタイムで更新されない。さらに、残席がない会場をうっかり選んでブラウザの戻るボタンを押すと、ページがレンダリングされない。時間ロスになるので、<b>絶対に絶対に絶対に戻るボタンは押すな！「接種会場一覧」を押せ！</b>
-                </p>
+function draw_image( h , m , p  , s ){
+    var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        // 背景色を赤色に設定
+        colors=["red","black"];
+        ctx.fillStyle = "red";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 32ptの黒色で文字列を描画
+        ctx.font = "32pt mincho-regular";
+        ctx.fillStyle = "white";
+        var left_year = 68-Math.floor( s / (60*60*24*365.25));
+        var text=isJapaneseLanguage()?
+        (( p > 0 )?`あなたが\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。"):
+        (( p > 0 )?`ENG\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"Your are dead");
+        var maxWidth = 520; // canvasの幅から少し余裕をもって設定
+        var lineHeight = 40; // 行の高さ
+        var x = 10; // 文字列の開始位置（x座標）
+        var y = 40; // 文字列の開始位置（y座標）
 
-                <p>(5)
-                    希望の時間帯をクリックして、「ありません」とでなければ、ほぼ勝利だ。ご苦労さま。画面上で残席があっても予約できないことがある。このときも前述と同じ理由で<strong>絶対に絶対に絶対に戻るボタンは押すな。「接種会場一覧」を押せ！</strong>選べる時間帯に選択肢がないことも多く、テレワーク不可な人や店舗営業やエッセンシャルワーカーな人は辛いかもしれない。
-                </p>
-                <p>(6)おわり</p>
-                
-    <h3>反応</h3>
-    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">ワクチン予約取れましたー！<br>こちら、参考にさせていただきました！<br>ありがとうございます🙏✨ <a href="https://t.co/yOOu7CzUtP">https://t.co/yOOu7CzUtP</a></p>&mdash; はと (@pigeon_nail) <a href="https://twitter.com/pigeon_nail/status/1423217460807835653?ref_src=twsrc%5Etfw">August 5, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">本当にF5アタックはだめですよ!!(経験者は語る) <a href="https://t.co/eP2ZEW8uUx">https://t.co/eP2ZEW8uUx</a></p>&mdash; Sho INOUE (@shoinoue) <a href="https://twitter.com/shoinoue/status/1423189821665595399?ref_src=twsrc%5Etfw">August 5, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">私も1回目のトライではF5アタックで失敗してしまったので、これから予約する人は注意して欲しい <a href="https://t.co/Bx4n0jiJik">https://t.co/Bx4n0jiJik</a></p>&mdash; ＦＪＴＫ (@FJTK) <a href="https://twitter.com/FJTK/status/1423191959397494786?ref_src=twsrc%5Etfw">August 5, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        wrapText(ctx, text, x, y, maxWidth, lineHeight);
 
-                <h3>追記</h3>
-                <ul>
-                    <li>予約サイトは日々アップデートしています。いろいろ変わるかもしれません。2021/07/15より前の武勇伝は役に立ちません。</li>
-                    <li>Webエンジニア系では、このサイトはどうすべきだったのかという思考実験が数多くありますが、そんなもんやっても誰も幸せになりません。</li>
-                    <li>たけしの挑戦状は株式会社タイトーの商標登録です。</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            var lines = text.split('\n');
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                context.fillText(line, x, y);
+                y += lineHeight+8;
+            }
+        }
+        var canvasImage = document.getElementById("canvasImage");
+        canvasImage.src = canvas.toDataURL();
+
+
+}
+
+function isJapaneseLanguage() {
+    const userLanguage = navigator.language || navigator.userLanguage;
+    return /^ja(-.*)?$/.test(userLanguage);
+}
+
+
+function get_time_from_percent(percent) {
+    // パーセントから時間と分を計算
+    var totalMinutes = Math.floor(percent * 24 * 60); // 一日の総分数
+    var hour = Math.floor(totalMinutes / 60); // 時間
+    var minutes = totalMinutes % 60; // 分
+    return { hour: hour, minutes: minutes };
+}
+
+function get_second_from_birth_to_current(birth_year, birth_month, birth_day) {
+    // 誕生日をUTCに変換
+    var birthDate = new Date(Date.UTC(birth_year, birth_month - 1, birth_day));
+    // 現在のUTC時間を取得
+    var currentDate = new Date();
+    // 誕生日から現在までの経過秒数を計算
+    var secondsFromBirthToCurrent = (currentDate - birthDate) / 1000;
+    return secondsFromBirthToCurrent;
+}
+
+    </script>
+</body>
+</html>
+
