@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
     <link rel="stylesheet" href="s.css">
+    <!--
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-3850197898480094", enable_page_level_ads: true });</script>
+
+    -->
+
     <title>If you are AkiraToriyama</title>
 </head>
 <body>
@@ -33,10 +37,10 @@ var select = document.getElementById("yearSelect");
         }
 
 var select = document.getElementById("monthSelect");
-        for (var month = 1; month <= 12; month++) {
+        for (var month = 0; month <= 12; month++) {
             var option = document.createElement("option");
             option.value = month;
-            option.text = month + "月";
+            option.text = (  0 < month )?( month + "月") :"Select Month";
             select.appendChild(option);
         }
 
@@ -49,6 +53,9 @@ function redraw(){
 
     var birth_year = document.getElementById("yearSelect").value;
     var birth_month = document.getElementById("monthSelect").value;
+    if ( 1 > birth_month ){
+        return;
+    }
 
     var sec=get_second_from_birth_to_current(birth_year, birth_month, birth_day); // 結果を出力
     const toriyama_life=2174515200;
@@ -71,7 +78,7 @@ function draw_image( h , m , p  , s ){
         ctx.fillStyle = "white";
         var left_year = 68-Math.floor( s / (60*60*24*365.25));
         var text=isJapaneseLanguage()?
-        (( p > 0 )?`あなたが\n鳥山明(享年68歳)ならば\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。"):
+        (( p > 0 )?`あなたが\n鳥山明(享年68歳)ならば\n人生は残り`+p+`%。\n一日で言えば、\n`+h+`時`+m+`分。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。"):
         (( p > 0 )?`ENG\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"Your are dead");
         var maxWidth = 520; // canvasの幅から少し余裕をもって設定
         var lineHeight = 40; // 行の高さ
