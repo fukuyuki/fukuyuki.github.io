@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="s.css">
+    <title>If you are AkiraToriyama</title>
+</head>
+<body>
+    <h3>もし鳥山明なら:</h3>
+    <p>
+        <b>Birth_Year:</b>
+        <select id="yearSelect" onchange="redraw()"></select>
+        <b>Birth_Month:</b>
+        <select id="monthSelect" onchange="redraw()"></select>    
+    </p>
+
+    <canvas id="myCanvas" width="540" height="320"></canvas>
+    <script>
+
+var select = document.getElementById("yearSelect");
+        for (var year = 1933; year <= 2020; year++) {
+            var option = document.createElement("option");
+            option.value = year;
+            option.text = year;
+            if (year === 1980) {
+                option.selected = true; // 1980年を選択済みに設定
+            }
+            select.appendChild(option);
+        }
+
+var select = document.getElementById("monthSelect");
+        for (var month = 1; month <= 12; month++) {
+            var option = document.createElement("option");
+            option.value = month;
+            option.text = month + "月";
+            select.appendChild(option);
+        }
+
+//redraw();
+
+function redraw(){
+    var birth_year = 1980;
+    var birth_day = 1;
+    var sec=0;
+
+    var birth_year = document.getElementById("yearSelect").value;
+    var birth_month = document.getElementById("monthSelect").value;
+
+    var sec=get_second_from_birth_to_current(birth_year, birth_month, birth_day); // 結果を出力
+    const toriyama_life=2174515200;
+    var percent = sec / toriyama_life;
+    var left_percent = (100 -Math.floor( percent*100 ));
+    var time = get_time_from_percent(percent);
+    draw_image( time.hour , time.minutes , left_percent , sec );
+
+}
+
+function draw_image( h , m , p  , s ){
+    var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        // 背景色を赤色に設定
+        colors=["red","black"];
+        ctx.fillStyle = "red";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 32ptの黒色で文字列を描画
+        ctx.font = "32pt mincho-regular";
+        ctx.fillStyle = "white";
+        var left_year = 68-Math.floor( s / (60*60*24*365.25));
+        var text=( p > 0 )?`あなたが\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。";
+        var maxWidth = 520; // canvasの幅から少し余裕をもって設定
+        var lineHeight = 40; // 行の高さ
+        var x = 10; // 文字列の開始位置（x座標）
+        var y = 40; // 文字列の開始位置（y座標）
+
+        wrapText(ctx, text, x, y, maxWidth, lineHeight);
+
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            var lines = text.split('\n');
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                context.fillText(line, x, y);
+                y += lineHeight+8;
+            }
+        }
+
+}
+
+function get_time_from_percent(percent) {
+    // パーセントから時間と分を計算
+    var totalMinutes = Math.floor(percent * 24 * 60); // 一日の総分数
+    var hour = Math.floor(totalMinutes / 60); // 時間
+    var minutes = totalMinutes % 60; // 分
+    return { hour: hour, minutes: minutes };
+}
+
+function get_second_from_birth_to_current(birth_year, birth_month, birth_day) {
+    // 誕生日をUTCに変換
+    var birthDate = new Date(Date.UTC(birth_year, birth_month - 1, birth_day));
+    // 現在のUTC時間を取得
+    var currentDate = new Date();
+    // 誕生日から現在までの経過秒数を計算
+    var secondsFromBirthToCurrent = (currentDate - birthDate) / 1000;
+    return secondsFromBirthToCurrent;
+}
+
+    </script>
+</body>
+</html>
+
