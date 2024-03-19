@@ -7,18 +7,17 @@
     <link rel="stylesheet" href="s.css">
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-3850197898480094", enable_page_level_ads: true });</script>
-
     <title>If you are AkiraToriyama</title>
 </head>
 <body>
-    <h3>もし鳥山明なら:</h3>
+    <h3>鳥山明ならば:</h3>
     <p>
         <b>Birth_Year:</b>
         <select id="yearSelect" onchange="redraw()"></select>
         <b>Birth_Month:</b>
         <select id="monthSelect" onchange="redraw()"></select>    
     </p>
-    <img id="canvasImage" src="" alt="Canvas Image" >
+    <img id="canvasImage" alt="Canvas Image" src="https://static.chunichi.co.jp/image/article/size1/7/b/f/7/7bf7b57d12249c58264f21fcfcb15510_1.jpg">
     <canvas id="myCanvas" width="540" height="320" style="display:none;"></canvas>
     <script>
 
@@ -72,7 +71,7 @@ function draw_image( h , m , p  , s ){
         ctx.fillStyle = "white";
         var left_year = 68-Math.floor( s / (60*60*24*365.25));
         var text=isJapaneseLanguage()?
-        (( p > 0 )?`あなたが\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。"):
+        (( p > 0 )?`あなたが\n鳥山明(享年68歳)ならば\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。"):
         (( p > 0 )?`ENG\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"Your are dead");
         var maxWidth = 520; // canvasの幅から少し余裕をもって設定
         var lineHeight = 40; // 行の高さ
