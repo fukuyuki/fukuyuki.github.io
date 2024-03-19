@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
     <link rel="stylesheet" href="s.css">
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-3850197898480094", enable_page_level_ads: true });</script>
-    
+
     <title>If you are AkiraToriyama</title>
 </head>
 <body>
@@ -17,8 +18,8 @@
         <b>Birth_Month:</b>
         <select id="monthSelect" onchange="redraw()"></select>    
     </p>
-
-    <canvas id="myCanvas" width="540" height="320"></canvas>
+    <img id="canvasImage" src="" alt="Canvas Image" >
+    <canvas id="myCanvas" width="540" height="320" style="display:none;"></canvas>
     <script>
 
 var select = document.getElementById("yearSelect");
@@ -70,7 +71,9 @@ function draw_image( h , m , p  , s ){
         ctx.font = "32pt mincho-regular";
         ctx.fillStyle = "white";
         var left_year = 68-Math.floor( s / (60*60*24*365.25));
-        var text=( p > 0 )?`あなたが\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。";
+        var text=isJapaneseLanguage()?
+        (( p > 0 )?`あなたが\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"あなたが\n鳥山明(享年68歳)なら\nすでに死んでいます。"):
+        (( p > 0 )?`ENG\n鳥山明(享年68歳)なら\n人生は残り`+p+`%です。\n一日で言えば、\n`+h+`時`+m+`分です。\n残り`+left_year+`年、良い一日を。` :"Your are dead");
         var maxWidth = 520; // canvasの幅から少し余裕をもって設定
         var lineHeight = 40; // 行の高さ
         var x = 10; // 文字列の開始位置（x座標）
@@ -87,8 +90,17 @@ function draw_image( h , m , p  , s ){
                 y += lineHeight+8;
             }
         }
+        var canvasImage = document.getElementById("canvasImage");
+        canvasImage.src = canvas.toDataURL();
+
 
 }
+
+function isJapaneseLanguage() {
+    const userLanguage = navigator.language || navigator.userLanguage;
+    return /^ja(-.*)?$/.test(userLanguage);
+}
+
 
 function get_time_from_percent(percent) {
     // パーセントから時間と分を計算
