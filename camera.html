@@ -3,152 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stylish Camera App</title>
+    <title>Camera Advice App</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-            color: #222;
+        :root {
+            --primary-color: #0fdb80;
+            --background-color: #fff;
+            --text-color: #222;
         }
 
-        header {
-            background-color: #0fdb80;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            font-size: 1.5em;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
         }
 
         #description {
-            padding: 20px;
             text-align: center;
-            font-size: 1.2em;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
         }
 
         #video-container {
-            display: none;
             position: relative;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         #video {
             width: 100%;
+            border-radius: 8px;
+            background-color: #000;
         }
 
-        #video-overlay {
+        .overlay-text {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1em;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
             text-align: center;
+            max-width: 80%;
         }
 
         #buttons {
-            text-align: center;
-            margin: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
         }
 
-        #buttons button {
-            background-color: #0fdb80;
-            color: #fff;
+        button {
+            background-color: var(--primary-color);
+            color: white;
             border: none;
             padding: 10px 20px;
-            font-size: 1em;
-            margin: 5px;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s;
         }
 
-        #buttons button:hover {
-            background-color: #0caf64;
+        button:hover {
+            opacity: 0.9;
         }
 
         footer {
             text-align: center;
-            padding: 10px;
-            background-color: #f1f1f1;
-            color: #222;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            #buttons {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
-    <header>Stylish Camera App</header>
+    <div class="container">
+        <div id="description">
+                   </div>
 
-    <div id="description">はじめましょう(なんか説明)</div>
+        <div id="video-container" style="display:none">
+            <video id="video" autoplay playsinline></video>
+            <div class="overlay-text">
+                スマートフォンを立てかけて、カメラから部屋の掃除したい部分が見えるように調整してください
+            </div>
+        </div>
 
-    <div id="video-container">
-        <video id="video" autoplay playsinline></video>
-        <div id="video-overlay">スマートフォンを立てかけて、カメラから部屋の掃除したい部分が見えるように調整してください</div>
+        <div id="buttons">
+            <button id="start_button">start</button>
+            <button id="camera_front_back_switch" style="display:none">camera_front_back_switch</button>
+            <button id="get_advice" style="display:none">get_advice</button>
+        </div>
     </div>
 
-    <div id="buttons">
-        <button id="start_button">start</button>
-        <button id="camera_front_back_switch" style="display: none;">camera_front_back_switch</button>
-        <button id="get_advice" style="display: none;">get_advice</button>
-    </div>
-
-    <footer>(c) @fukuyuki</footer>
+    <footer>
+        <p>&copy; @fukuyuki</p>
+    </footer>
 
     <script>
-        window.onload = () => {
-            const startButton = document.getElementById('start_button');
-            const cameraSwitchButton = document.getElementById('camera_front_back_switch');
-            const getAdviceButton = document.getElementById('get_advice');
-            const videoContainer = document.getElementById('video-container');
-            const video = document.getElementById('video');
+        let stream;
+        let currentCamera = 'environment';
 
-            // スマートフォンのカメラを開く
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
-                .then(stream => {
-                    video.srcObject = stream;
-                    videoContainer.style.display = 'block';
-                    startButton.style.display = 'none';
-                    cameraSwitchButton.style.display = 'inline-block';
-                    getAdviceButton.style.display = 'inline-block';
-                })
-                .catch(error => {
-                    console.error('Error accessing camera:', error);
-                });
-
-            getAdviceButton.onclick = () => {
-                getAdviceButton.style.display = 'none';
-                sayAdvice();
-                setInterval(sayAdvice, 60000);
-            };
-
-            function sayAdvice() {
-                const uid = document.cookie.split('; ').find(row => row.startsWith('uid='))?.split('=')[1] || "DUMMY_UID";
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                context.drawImage(video, 0, 0);
-                const jpeg = canvas.toDataURL('image/jpeg');
-
-                fetch('/get_advice', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ uid, jpeg })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const advice = data.say;
-                    const msg = new SpeechSynthesisUtterance(`${advice} ${new Date().toLocaleTimeString('ja-JP')}`);
-                    msg.lang = 'ja-JP';
-                    msg.rate = 1.5;
-                    window.speechSynthesis.speak(msg);
-                })
-                .catch(error => {
-                    console.error('Error fetching advice:', error);
-                });
-            }
+        // Cookie handling utility
+        const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
         };
+
+        // Initialize camera stream
+        async function initCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: currentCamera }
+                });
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                document.getElementById('video-container').style.display = 'block';
+                document.getElementById('start_button').style.display = 'none';
+                document.getElementById('camera_front_back_switch').style.display = 'inline-block';
+                document.getElementById('get_advice').style.display = 'inline-block';
+            } catch (err) {
+                console.error('カメラの初期化に失敗しました:', err);
+                alert('カメラへのアクセスを許可してください。');
+            }
+        }
+
+        // Switch camera
+        async function switchCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            currentCamera = currentCamera === 'environment' ? 'user' : 'environment';
+            await initCamera();
+        }
+
+        // Get frame from video
+        function getVideoFrame() {
+            const video = document.getElementById('video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            return canvas.toDataURL('image/jpeg');
+        }
+
+        // Speech synthesis setup
+        const speak = (text) => {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ja-JP';
+            utterance.rate = 1.2;
+            speechSynthesis.speak(utterance);
+        };
+
+        // Advice function
+        async function sayAdvice() {
+            const uid = getCookie('uid') || 'DUMMY_UID';
+            const jpeg = getVideoFrame();
+
+            try {
+                const response = await fetch('/get_advice', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        uid: uid,
+                        image: jpeg
+                    })
+                });
+
+                const data = await response.json();
+                const currentTime = new Date().toLocaleTimeString('ja-JP');
+                speak(`${data.say} ${currentTime}`);
+            } catch (err) {
+                console.error('アドバイスの取得に失敗しました:', err);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('start_button').addEventListener('click', initCamera);
+        document.getElementById('camera_front_back_switch').addEventListener('click', switchCamera);
+        
+        document.getElementById('get_advice').addEventListener('click', function() {
+            this.style.display = 'none';
+            sayAdvice();
+            setInterval(sayAdvice, 60000); // Run every minute
+        });
     </script>
 </body>
 </html>
