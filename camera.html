@@ -3,143 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stylish Responsive Camera App</title>
+    <title>Camera Advice App</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             color: #222;
             background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
-        header {
-            background-color: #0fdb80;
-            padding: 1rem;
-            text-align: center;
-            font-size: 1.5rem;
-            color: #fff;
+        h1 {
+            color: #0fdb80;
+            margin-bottom: 20px;
         }
 
         #video-container {
             display: none;
             width: 100%;
-            height: auto;
+            max-height: 80vh;
+            margin-bottom: 20px;
         }
 
-        video {
+        #video-container video {
             width: 100%;
             height: auto;
         }
 
         #buttons {
             display: flex;
-            justify-content: center;
-            margin: 2rem 0;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        #buttons button {
-            background-color: #0fdb80;
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
             color: #fff;
+            background-color: #0fdb80;
             border: none;
-            padding: 0.75rem 1.5rem;
-            margin: 0 1rem;
-            font-size: 1rem;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        #buttons button:hover {
-            opacity: 0.9;
+        button:hover {
+            background-color: #0bc970;
+        }
+
+        #advice-text {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
         }
 
         footer {
-            background-color: #0fdb80;
-            color: #fff;
-            text-align: center;
-            padding: 1rem 0;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             width: 100%;
-        }
-
-        #instruction {
             text-align: center;
-            margin: 1rem;
-            display: none;
-            color: #222;
-            font-size: 1rem;
+            padding: 10px;
+            background-color: #0fdb80;
+            color: #fff;
         }
     </style>
 </head>
 <body>
 
-<header>Responsive Stylish Camera App</header>
+    <h1>Camera Advice App</h1>
 
-<div id="video-container">
-    <video id="camera-stream" autoplay playsinline></video>
-</div>
+    <div id="video-container">
+        <video autoplay playsinline></video>
+    </div>
 
-<div id="instruction">スマートフォンを立てかけて、カメラから部屋の汚い部分が見えるように調整してください。</div>
+    <div id="buttons">
+        <button id="start_button" onclick="startCamera()">Start</button>
+        <button id="camera_front_back_switch" style="display: none;" onclick="switchCamera()">Switch Camera</button>
+        <button id="get_advice" style="display: none;" onclick="getAdvice()">Get Advice</button>
+    </div>
 
-<div id="buttons">
-    <button id="start_button" onclick="startCamera()">start</button>
-    <button id="get_advice" style="display:none;" onclick="getAdvice()">get_advice</button>
-</div>
+    <div id="advice-text">スマートフォンを立てかけて、カメラから部屋の汚い部分が見えるように調整してください。</div>
 
-<footer>(c) @fukuyuki</footer>
+    <footer>
+        (c) @fukuyuki
+    </footer>
 
-<script>
-    let isFrontCamera = true;
-    const videoElement = document.getElementById('camera-stream');
+    <script>
+        let videoElement = document.querySelector('#video-container video');
+        let videoContainer = document.getElementById('video-container');
+        let adviceText = document.getElementById('advice-text');
+        let currentStream;
 
-    async function startCamera() {
-        const constraints = {
-            video: {
-                facingMode: isFrontCamera ? 'user' : 'environment'
+        async function startCamera() {
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoElement.srcObject = currentStream;
+                videoContainer.style.display = 'block';
+                document.getElementById('start_button').style.display = 'none';
+                document.getElementById('camera_front_back_switch').style.display = 'block';
+                document.getElementById('get_advice').style.display = 'block';
+                adviceText.style.display = 'block';
+            } catch (err) {
+                console.error('Error accessing the camera:', err);
             }
-        };
-
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            videoElement.srcObject = stream;
-            document.getElementById('video-container').style.display = 'block';
-            document.getElementById('instruction').style.display = 'block';
-            document.getElementById('start_button').style.display = 'none';
-            document.getElementById('get_advice').style.display = 'inline-block';
-        } catch (err) {
-            console.error('Error accessing camera: ', err);
         }
-    }
 
-    function getAdvice() {
-        setTimeout(sayAdvice, 5000);
-        setInterval(sayAdvice, 60000);
-    }
+        async function switchCamera() {
+            if (!currentStream) return;
+            let videoTracks = currentStream.getVideoTracks();
+            let currentFacingMode = videoTracks[0].getSettings().facingMode;
+            let newFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
 
-    async function sayAdvice() {
-        const uid = document.cookie.split('; ').find(row => row.startsWith('uid='))?.split('=')[1] || "DUMMY_UID";
+            try {
+                currentStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: newFacingMode }
+                });
+                videoElement.srcObject = currentStream;
+            } catch (err) {
+                console.error('Error switching camera:', err);
+            }
+        }
 
-        const canvas = document.createElement('canvas');
-        canvas.width = videoElement.videoWidth;
-        canvas.height = videoElement.videoHeight;
-        const context = canvas.getContext('2d');
-        context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-        const jpeg = canvas.toDataURL('image/jpeg');
+        function getAdvice() {
+            setTimeout(() => sayAdvice(), 5000);
+            setInterval(() => sayAdvice(), 60000);
+        }
 
-        const response = await fetch('/get_advice', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ uid, jpeg })
-        });
+        function sayAdvice() {
+            let uid = document.cookie.match(/uid=([^;]*)/)?.[1] || "DUMMY_UID";
+            videoElement.pause();
+            let canvas = document.createElement('canvas');
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            let context = canvas.getContext('2d');
+            context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            let jpeg = canvas.toDataURL('image/jpeg');
 
-        const data = await response.json();
-
-        const speech = new SpeechSynthesisUtterance(`${new Date().toLocaleTimeString('ja-JP')} ${data.message}`);
-        speech.lang = 'ja-JP';
-        speech.rate = 1.5;
-        window.speechSynthesis.speak(speech);
-    }
-</script>
+            fetch('/get_advice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid, jpeg })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let now = new Date();
+                    let time = `${now.getHours()}時${now.getMinutes()}分`;
+                    let msg = data.message || `アドバイスの時間は ${time} です。`;
+                    let speech = new SpeechSynthesisUtterance(msg);
+                    speech.lang = 'ja-JP';
+                    speech.rate = 1.5;
+                    window.speechSynthesis.speak(speech);
+                })
+                .catch(err => console.error('Error sending advice request:', err));
+        }
+    </script>
 
 </body>
 </html>
