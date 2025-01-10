@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カメラとWeb Speechで時刻を発声</title>
+    <title>カメラと時刻発声</title>
     <style>
         #frame-container {
             margin-top: 20px;
@@ -13,12 +13,23 @@
             height: 240px;
             border: 1px solid #000;
         }
+        #video-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
     <h1>カメラフレームを表示し、時刻を早口で発声</h1>
 
-    <video id="video" width="640" height="480" autoplay></video>
+    <button id="start-btn">Start</button>
+    <div id="video-container">
+        <video id="video" width="640" height="480" autoplay></video>
+        <div>
+            <button id="toggle-camera-btn">前面カメラ</button>
+        </div>
+    </div>
     
     <div id="frame-container">
         <h2>1分ごとにキャプチャされたフレーム</h2>
@@ -26,11 +37,18 @@
     </div>
 
     <script>
-        // カメラのストリームを取得して表示
+        let currentStream;
+        let currentCamera = 'user';  // 初期は前面カメラ
+        const video = document.getElementById('video');
+        const startBtn = document.getElementById('start-btn');
+        const toggleCameraBtn = document.getElementById('toggle-camera-btn');
+        
+        // カメラを取得して表示
         async function startCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('video').srcObject = stream;
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentCamera } });
+                currentStream = stream;
+                video.srcObject = stream;
             } catch (err) {
                 console.error('カメラの取得に失敗しました:', err);
             }
@@ -38,7 +56,6 @@
 
         // フレームをJPEGでキャプチャして表示
         function captureFrame() {
-            const video = document.getElementById('video');
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -66,13 +83,28 @@
         }
 
         // 1分ごとにフレームをキャプチャし、時刻を発声
-        setInterval(() => {
-            captureFrame();
-            speakTime();
-        }, 60000);
+        let interval;
+        startBtn.addEventListener('click', () => {
+            startBtn.disabled = true;  // Startボタンを無効化
+            startCamera();
+            interval = setInterval(() => {
+                captureFrame();
+                speakTime();
+            }, 60000);
+        });
 
-        // カメラを開始
-        startCamera();
+        // カメラ切り替えボタン
+        toggleCameraBtn.addEventListener('click', () => {
+            // ストリームを停止して新しいカメラを取得
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+
+            currentCamera = currentCamera === 'user' ? 'environment' : 'user';  // 前面/背面カメラ切替
+            toggleCameraBtn.textContent = currentCamera === 'user' ? '前面カメラ' : '背面カメラ';
+
+            startCamera();
+        });
     </script>
 </body>
 </html>
