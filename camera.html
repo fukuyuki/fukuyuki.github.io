@@ -7,60 +7,69 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            color: #222;
-            background-color: #fff;
             margin: 0;
             padding: 0;
+            background-color: #fff;
+            color: #222;
         }
+
         header {
             background-color: #0fdb80;
             color: #fff;
             text-align: center;
-            padding: 1rem 0;
+            padding: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
-        #dscription {
-            padding: 2rem;
+
+        #description {
             text-align: center;
+            padding: 2rem;
             font-size: 1.2rem;
         }
+
         #video-container {
             display: none;
             width: 100%;
-            height: auto;
-            background: #ddd;
-            overflow: hidden;
-        }
-        video {
-            width: 100%;
-            height: auto;
-        }
-        #buttons {
+            aspect-ratio: 9 / 16;
+            background: #eee;
             text-align: center;
-            margin: 1rem 0;
         }
-        button {
-            background-color: #0fdb80;
-            border: none;
-            color: #fff;
-            padding: 0.8rem 1.2rem;
-            margin: 0.5rem;
+
+        #buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem;
+        }
+
+        #buttons button {
+            padding: 0.7rem 1.5rem;
             font-size: 1rem;
-            cursor: pointer;
+            border: none;
             border-radius: 5px;
+            background-color: #0fdb80;
+            color: #fff;
+            cursor: pointer;
         }
-        button:hover {
-            opacity: 0.8;
+
+        #buttons button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
         }
+
         #lefttime {
             text-align: center;
             font-size: 1.5rem;
+            font-weight: bold;
             margin-top: 1rem;
         }
+
         footer {
+            text-align: center;
+            padding: 1rem;
             background-color: #0fdb80;
             color: #fff;
-            text-align: center;
-            padding: 0.5rem;
             position: fixed;
             bottom: 0;
             width: 100%;
@@ -68,101 +77,79 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Camera Cleanup Assistant</h1>
-    </header>
+    <header>Stylish Camera App</header>
 
-    <div id="dscription">はじめましょう(なんか説明)</div>
+    <div id="description">はじめましょう(なんか説明)</div>
 
     <div id="video-container">
         <video id="video" autoplay playsinline></video>
     </div>
 
     <div id="buttons">
-        <button id="start_button">Start</button>
-        <button id="camera_front_back_switch" style="display:none;">Switch Camera</button>
-        <button id="get_advice" style="display:none;">Get Advice</button>
+        <button id="start_button">start</button>
+        <button id="camera_front_back_switch" style="display: none;">camera_front_back_switch</button>
+        <button id="get_advice" style="display: none;">get_advice</button>
     </div>
 
     <div id="lefttime">99:99</div>
 
-    <footer>
-        (c) @fukuyuki
-    </footer>
+    <footer>(c) @fukuyuki</footer>
 
     <script>
-        const startButton = document.getElementById('start_button');
-        const videoContainer = document.getElementById('video-container');
-        const video = document.getElementById('video');
-        const cameraSwitchButton = document.getElementById('camera_front_back_switch');
-        const getAdviceButton = document.getElementById('get_advice');
-        const description = document.getElementById('dscription');
+        window.onload = () => {
+            const description = document.getElementById("description");
+            const videoContainer = document.getElementById("video-container");
+            const startButton = document.getElementById("start_button");
+            const switchButton = document.getElementById("camera_front_back_switch");
+            const adviceButton = document.getElementById("get_advice");
 
-        let isFrontCamera = true;
-        let intervalId;
+            description.innerText = "スマートフォンを立てかけて、カメラから部屋の掃除したい部分が見えるように調整してください";
+            videoContainer.style.display = "block";
+            startButton.style.display = "none";
+            switchButton.style.display = "inline-block";
+            adviceButton.style.display = "inline-block";
 
-        async function startCamera() {
-            try {
-                const constraints = {
-                    video: {
-                        facingMode: isFrontCamera ? 'user' : 'environment'
-                    }
-                };
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                video.srcObject = stream;
-            } catch (err) {
-                console.error('Error accessing the camera: ', err);
-            }
-        }
+            // Open camera stream
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    const video = document.getElementById("video");
+                    video.srcObject = stream;
+                })
+                .catch((err) => console.error("Error accessing camera: ", err));
+
+            adviceButton.onclick = () => {
+                sayAdvice();
+                adviceButton.style.display = "none";
+                setInterval(sayAdvice, 60000);
+            };
+        };
 
         function sayAdvice() {
-            const uid = document.cookie.split('; ').find(row => row.startsWith('uid='))?.split('=')[1] || 'DUMMY_UID';
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
+            const uid = document.cookie.split('; ').find(row => row.startsWith('uid='))?.split('=')[1] || "DUMMY_UID";
+            const video = document.getElementById("video");
+            const canvas = document.createElement("canvas");
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const context = canvas.getContext("2d");
+            context.drawImage(video, 0, 0);
+            const jpeg = canvas.toDataURL("image/jpeg");
 
-            canvas.toBlob(async (blob) => {
-                const formData = new FormData();
-                formData.append('jpeg', blob, 'frame.jpg');
-                formData.append('uid', uid);
-                
-                try {
-                    const response = await fetch('/get_advice', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const result = await response.json();
-                    const message = `${new Date().toLocaleTimeString('ja-JP')} - ${result.advice}`;
-
-                    const utterance = new SpeechSynthesisUtterance(message);
-                    speechSynthesis.speak(utterance);
-                } catch (error) {
-                    console.error('Error fetching advice: ', error);
-                }
-            });
+            fetch('/get_advice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ uid, jpeg })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const advice = data.say;
+                const now = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+                const utterance = new SpeechSynthesisUtterance(`${advice} ${now}`);
+                utterance.lang = "ja-JP";
+                utterance.rate = 1.5;
+                speechSynthesis.speak(utterance);
+            })
+            .catch(err => console.error("Error fetching advice: ", err));
         }
-
-        startButton.onclick = () => {
-            startCamera();
-            videoContainer.style.display = 'block';
-            startButton.style.display = 'none';
-            cameraSwitchButton.style.display = 'inline-block';
-            getAdviceButton.style.display = 'inline-block';
-            description.innerText = 'スマートフォンを立てかけて、カメラから部屋の掃除したい部分が見えるように調整してください';
-        };
-
-        cameraSwitchButton.onclick = () => {
-            isFrontCamera = !isFrontCamera;
-            startCamera();
-        };
-
-        getAdviceButton.onclick = () => {
-            sayAdvice();
-            intervalId = setInterval(sayAdvice, 60000);
-            getAdviceButton.style.display = 'none';
-        };
     </script>
 </body>
 </html>
