@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カメラとWeb Speechで時刻を発声</title>
+    <style>
+        #frame-container {
+            margin-top: 20px;
+        }
+        #captured-frame {
+            width: 320px;
+            height: 240px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>カメラフレームを表示し、時刻を早口で発声</h1>
+
+    <video id="video" width="640" height="480" autoplay></video>
+    
+    <div id="frame-container">
+        <h2>1分ごとにキャプチャされたフレーム</h2>
+        <img id="captured-frame" src="" alt="Captured Frame">
+    </div>
+
+    <script>
+        // カメラのストリームを取得して表示
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                document.getElementById('video').srcObject = stream;
+            } catch (err) {
+                console.error('カメラの取得に失敗しました:', err);
+            }
+        }
+
+        // フレームをJPEGでキャプチャして表示
+        function captureFrame() {
+            const video = document.getElementById('video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // JPEGとして画像データを取得
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // 画像を画面下部に表示
+            document.getElementById('captured-frame').src = imageData;
+        }
+
+        // Web Speech APIを使って現在時刻を早口で発声
+        function speakTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const timeString = `${hours}時${minutes}分${seconds}秒です`;
+
+            const speech = new SpeechSynthesisUtterance(timeString);
+            speech.rate = 2;  // 早口で話すための速度設定
+            window.speechSynthesis.speak(speech);
+        }
+
+        // 1分ごとにフレームをキャプチャし、時刻を発声
+        setInterval(() => {
+            captureFrame();
+            speakTime();
+        }, 60000);
+
+        // カメラを開始
+        startCamera();
+    </script>
+</body>
+</html>
