@@ -1,110 +1,150 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カメラと時刻発声</title>
+    <title>Responsive Camera App</title>
     <style>
-        #frame-container {
-            margin-top: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            color: #222;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
         }
-        #captured-frame {
-            width: 320px;
-            height: 240px;
-            border: 1px solid #000;
-        }
+
         #video-container {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            background-color: #f0f0f0;
+            border: 2px solid #0fdb80;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        button {
+            background-color: #0fdb80;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #0fdb80;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>カメラフレームを表示し、時刻を早口で発声</h1>
 
-    <button id="start-btn">Start</button>
-    <div id="video-container">
-        <video id="video" width="640" height="480" autoplay></video>
-        <div>
-            <button id="toggle-camera-btn">前面カメラ</button>
-        </div>
-    </div>
-    
-    <div id="frame-container">
-        <h2>1分ごとにキャプチャされたフレーム</h2>
-        <img id="captured-frame" src="" alt="Captured Frame">
-    </div>
+<div id="video-container">
+    <video id="video" autoplay></video>
+</div>
+<div id="buttons">
+    <button id="start_button">Start</button>
+    <button id="get_advice" style="display: none;">Get Advice</button>
+</div>
 
-    <script>
-        let currentStream;
-        let currentCamera = 'user';  // 初期は前面カメラ
+<footer>
+    (c) @fukuyuki
+</footer>
+
+<script>
+    let videoStream;
+
+    async function openCamera(facingMode = 'user') {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+        }
+
+        try {
+            videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+            const video = document.getElementById('video');
+            video.srcObject = videoStream;
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+        }
+    }
+
+    function sayAdvice() {
         const video = document.getElementById('video');
-        const startBtn = document.getElementById('start-btn');
-        const toggleCameraBtn = document.getElementById('toggle-camera-btn');
-        
-        // カメラを取得して表示
-        async function startCamera() {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(async blob => {
+            const formData = new FormData();
+            formData.append('image', blob, 'frame.jpg');
+
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentCamera } });
-                currentStream = stream;
-                video.srcObject = stream;
-            } catch (err) {
-                console.error('カメラの取得に失敗しました:', err);
+                const response = await fetch('/get_advice', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                const say = data.say;
+
+                const utterance = new SpeechSynthesisUtterance(say);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 1.5;
+                speechSynthesis.speak(utterance);
+            } catch (error) {
+                console.error('Error fetching advice:', error);
             }
-        }
+        }, 'image/jpeg');
+    }
 
-        // フレームをJPEGでキャプチャして表示
-        function captureFrame() {
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    document.getElementById('start_button').addEventListener('click', () => {
+        openCamera();
+        const buttonsDiv = document.getElementById('buttons');
+        buttonsDiv.innerHTML += '<button id="switch_camera">Switch Camera</button>';
+        document.getElementById('start_button').style.display = 'none';
+        document.getElementById('get_advice').style.display = 'inline-block';
 
-            // JPEGとして画像データを取得
-            const imageData = canvas.toDataURL('image/jpeg');
-
-            // 画像を画面下部に表示
-            document.getElementById('captured-frame').src = imageData;
-        }
-
-        // Web Speech APIを使って現在時刻を早口で発声
-        function speakTime() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            const timeString = `${hours}時${minutes}分${seconds}秒です`;
-
-            const speech = new SpeechSynthesisUtterance(timeString);
-            speech.rate = 2;  // 早口で話すための速度設定
-            window.speechSynthesis.speak(speech);
-        }
-
-        // 1分ごとにフレームをキャプチャし、時刻を発声
-        let interval;
-        startBtn.addEventListener('click', () => {
-            startBtn.disabled = true;  // Startボタンを無効化
-            startCamera();
-            interval = setInterval(() => {
-                captureFrame();
-                speakTime();
-            }, 60000);
+        document.getElementById('switch_camera').addEventListener('click', () => {
+            const currentFacingMode = videoStream.getTracks()[0].getSettings().facingMode;
+            const newFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            openCamera(newFacingMode);
         });
+    });
 
-        // カメラ切り替えボタン
-        toggleCameraBtn.addEventListener('click', () => {
-            // ストリームを停止して新しいカメラを取得
-            if (currentStream) {
-                currentStream.getTracks().forEach(track => track.stop());
-            }
+    document.getElementById('get_advice').addEventListener('click', () => {
+        sayAdvice();
+        setInterval(sayAdvice, 60000); // Repeat every minute
+    });
+</script>
 
-            currentCamera = currentCamera === 'user' ? 'environment' : 'user';  // 前面/背面カメラ切替
-            toggleCameraBtn.textContent = currentCamera === 'user' ? '前面カメラ' : '背面カメラ';
-
-            startCamera();
-        });
-    </script>
 </body>
 </html>
