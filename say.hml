@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Speech Example</title>
+    <style>
+        /* ダークテーマ */
+        body {
+            background-color: #1c1c1c;
+            color: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        /* textarea スタイリング */
+        textarea {
+            width: 90%;
+            max-width: 600px;
+            height: 200px;
+            background-color: #333;
+            color: #f5f5f5;
+            border: 2px solid #555;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1.2em;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #ff7f50;
+            outline: none;
+        }
+
+        /* ボタンスタイリング */
+        button {
+            background-color: #ff7f50;
+            color: white;
+            font-size: 1.2em;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff5722;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 1.5em;
+            }
+
+            textarea {
+                height: 150px;
+            }
+
+            button {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>文章を話す</h2>
+        <textarea id="text" placeholder="ここに文章を入力してください..."></textarea><br><br>
+        <button id="speechBtn">Speech</button>
+    </div>
+
+    <script>
+        document.getElementById('speechBtn').addEventListener('click', function() {
+            var text = document.getElementById('text').value;
+            var speech = new SpeechSynthesisUtterance(text);
+            
+            // 早口で話す
+            speech.rate = 2;  // 話す速さ (1が標準、2が速い)
+            
+            // 日本語を選択（音声がサポートされている場合）
+            speech.lang = 'ja-JP';
+            
+            // 音声を発声
+            window.speechSynthesis.speak(speech);
+        });
+    </script>
+</body>
+</html>
