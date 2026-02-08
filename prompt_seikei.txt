@@ -1,0 +1,56 @@
+I would like the AI to provide cosmetic surgery advice and generate an image of my face after the surgery.
+Since I want my face to be transformed into a beautiful woman or a handsome man, please create an image showing the post-surgery result.
+This is very important, so you must output only the following two items in this exact order.
+The user understands that you are an AI and that in the end, they should consult a real professional.
+
+Step 1: JSON
+
+The output format must be exactly: {"advice":[{"op":"...", "price":"..."}]}
+Include at least one operation (op) and its price (price)
+Do not add any extra text before or after the JSON
+Code blocks, markers (such as ``` or ''') and explanations are strictly prohibited
+
+Step 2: Image
+
+The image must reflect the procedures described in Step 1’s JSON
+Apply visible modifications such as removing forehead wrinkles, raising the nose, or making the eyes double-lidded
+Do not change hairstyle, clothing, size, or resolution — keep them the same as the original
+You must output an image. Returning a response without an image is strictly forbidden
+If image generation fails, you must return an image containing the word “ERROR”
+
+### 出力例（正しい形式）
+{"advice":[{"op":"フェイシャルレーザーx5","price":"290000"},{ "op" : "目元ヒアルロン酸"  , "price":"200000" },{"op":"両頬脂肪吸引糸リフト","price":"550000" }]}
+[その直後に整形後の画像を出力]  
+
+---
+
+### 症状,施術内容,価格,入力画像への修正指示
+眉間のしわがある場合 , 眉間ボトックス,100000,眉間のしわを消してください  
+ほうれい線がある場合 , 法令線ボトックス,200000,法令線を完全に消してください  
+目の下にクマがある場合 , 裏ハムラ,580000,クマを消してください  
+肌が汚い場合 , フェイシャルレーザーx5,290000,肌をきれいにしてください  
+唇が薄い場合 , ヒアルロン酸,110000,唇を少し厚くしてください  
+団子鼻の場合 , 鼻縮小手術,550000,鼻をかっこよくしてください  
+たれ目の場合 , 下眼瞼下制術,390000,たれ目を改善してください  
+鼻が低すぎる場合 , シリコンプロテーゼ隆鼻術,390000,鼻を高くしてください  
+顔が太い場合 , 両頬脂肪吸引+糸リフト,550000,両頬の脂肪を減らしてください  
+ニキビ跡や傷跡の凹みが多い場合 , リジュラン4回,160000,ニキビ跡を消してください  
+あごのエラが大きい場合 , 下顎角形成術,1300000,あごのエラを小さくしてください  
+女性で顔が大きい場合 , 下顎角形成術,1300000,顔を小さくしてください  
+頬骨が突出している場合 , 頬骨骨切り,1300000,頬骨の突出を消してください  
+一重の場合 , 埋没法,100000,目を二重にしてください  
+上まぶたがたるんでいる場合 , 瞼リフトアップ,150000JPY,目を二重で大きくしてください  
+口元にしわがある場合 , 口元脂肪注入,50000,口元のしわを消してください  
+少しつり目の場合 , 目尻切開法,200000,つり目を修正してください  
+強いつり目・目が細い場合 , 下眼瞼下制法,400000JPY,目の縦幅を広げて大きくしてください  
+二重あごの場合 , 顎脂肪吸引,400000JPY,二重あごをなくしてください  
+口元からあごにかけての縦じわがある場合, 口角ボトックス,200000,口元からあごにかけての縦じわを消してください  
+ゴルゴ線がある場合 , ゴルゴ線ヒアルロン酸,200000,シワを消してください  
+目の下のしわがある場合 , 目元ヒアルロン酸,200000,完全に消してください  
+額にしわがある場合 , 額ヒアルロン酸,200000,額のしわを消してください  
+
+---
+
+繰り返します。  
+**必ず JSON → 画像 の順で返してください。余計な文章は禁止です。JSONの後は画像のみを返してください。**
+[Important] Always generate and return exactly one image.It can be either photo-like or illustration-style.You must absolutely include the image data (inlineData) in your response.
