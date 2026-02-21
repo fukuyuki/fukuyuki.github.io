@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHDリマインダー</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #264653; /* Dark teal-blue */
+            --accent-color: #2a9d8f; /* Persian green - vibrant and calming */
+            --text-color: #ecf0f1; /* Light gray */
+            --bg-color: #21363f; /* Even darker teal-blue for background */
+            --card-bg: #2c515d; /* Slightly lighter bg for elements */
+            --border-radius: 8px;
+            --font-family-display: 'Orbitron', monospace;
+            --font-family-body: 'Noto Sans JP', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll on small screens */
+        }
+
+        .container {
+            background-color: var(--primary-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            animation: rotateBackground 60s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rotateBackground {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-family: var(--font-family-display);
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            letter-spacing: 1px;
+            /* Apply gradient to H1 for a more stylish look */
+            background: linear-gradient(45deg, var(--accent-color), #6DCCA8); /* Gradient effect */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(42, 157, 143, 0.5); /* Shadow matching new accent color */
+        }
+
+        .input-box {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .text-input {
+            width: 100%; /* 幅100% */
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid var(--card-bg);
+            border-radius: var(--border-radius);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .text-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.3); /* Shadow color adjusted to new accent */
+        }
+
+        .time-display {
+            font-family: var(--font-family-display);
+            font-size: 4.5em; /* Larger font size */
+            font-weight: 700;
+            color: var(--text-color);
+            /* Adjust gradient for time display to match new palette */
+            background: linear-gradient(45deg, #8ad3c7, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(78, 205, 196, 0.6); /* Shadow color adjusted */
+            letter-spacing: 2px;
+            margin-top: 20px;
+            padding: 10px 0;
+            display: inline-block; /* Allows text-shadow to work nicely */
+            min-width: 200px; /* Ensure consistent width during updates */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .time-display {
+                font-size: 3.5em;
+            }
+            .text-input {
+                padding: 12px 15px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+            .time-display {
+                font-size: 2.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ADHDリマインダー</h1>
+        <div class="input-box">
+            <input type="text" id="speechTextInput" class="text-input" placeholder="リマインダー内容を入力 (例: 水を飲む, 休憩)" aria-label="テキスト入力">
+        </div>
+        <div id="timeDisplay" class="time-display">
+            --:--:--
+        </div>
+    </div>
+
+    <script>
+        const timeDisplay = document.getElementById('timeDisplay');
+        const speechTextInput = document.getElementById('speechTextInput');
+        let selectedVoice = null;
+        let lastSpokenMinute = -1; // Track the minute when speech last occurred
+        let updateIntervalId; // To store the interval ID
+        const activeInterval = 800; // Interval when tab is active
+        const backgroundInterval = 1000; // Interval when tab is in background (more likely to be honored)
+
+        // Function to find and set the preferred Japanese female voice
+        function setJapaneseFemaleVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                // Prioritize Google Japanese voices
+                selectedVoice = voices.find(
+                    voice => voice.lang === 'ja-JP' && voice.name.includes('Google') && (voice.name.includes('Female') || voice.name.includes('女性'))
+                );
+                // Fallback to any Japanese female voice
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(
+                        voice => voice.lang === 'ja-JP' && (voice.name.includes('Female') || voice.name.includes('女性'))
+                    );
+                }
+                // Fallback to any Japanese voice if no specific female voice found
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(voice => voice.lang === 'ja-JP');
+                }
+                if (selectedVoice) {
+                    console.log('Selected voice:', selectedVoice.name);
+                } else {
+                    console.warn('No suitable Japanese voice found. Speech might use a default or not work.');
+                }
+            } else {
+                console.log('No voices available yet. Waiting for onvoiceschanged event.');
+            }
+        }
+
+        // Set voices initially and listen for changes, as voices can load asynchronously
+        if ('speechSynthesis' in window) {
+            // Attempt to set voices immediately (might be empty on first load)
+            setJapaneseFemaleVoice();
+            // Listen for voices to be loaded/changed
+            window.speechSynthesis.onvoiceschanged = () => {
+                setJapaneseFemaleVoice();
+            };
+        } else {
+            console.warn("Web Speech APIは、お使いのブラウザではサポートされていません。");
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const currentMinuteInt = now.getMinutes(); // Get current minutes as integer for comparison
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            // 時刻表示をhh:mm:ssにしてください。コロンをつけて
+            const currentTime = `${hours}:${minutes}:${seconds}`;
+            timeDisplay.textContent = currentTime;
+
+            // <title> をADHDリマインダー(${current_time_second}))にする。
+            document.title = `(${seconds})ADHDリマインダー`;
+
+            const textToSpeak = speechTextInput.value.trim();
+
+            // Speech logic: speak once per minute when the minute changes, if text is available.
+            // This is more robust against browser background throttling.
+            if (textToSpeak !== "" && currentMinuteInt !== lastSpokenMinute) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                    utterance.lang = 'ja-JP';
+                    utterance.rate = 1.2; // 少し早めに (slightly faster than default)
+
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                    } else {
+                        console.warn("特定の日本語女性音声が見つかりません。デフォルトの日本語音声を使用します。");
+                    }
+
+                    window.speechSynthesis.speak(utterance);
+                    lastSpokenMinute = currentMinuteInt; // Update the minute we last spoke
+                    console.log(`Speech triggered at ${currentTime} for minute ${currentMinuteInt}.`);
+                } else {
+                    console.warn("Web Speech APIは利用できません。");
+                }
+            } else if (textToSpeak === "") {
+                // If text box is empty, log a message but don't speak or update lastSpokenMinute.
+                // This ensures that if text is entered later in the same minute, it will still speak.
+                // Also, if lastSpokenMinute is -1 (initial state) and text is empty, no speech.
+                // console.log(`時刻: ${currentTime}. テキストボックスが空のため、音声は再生されません。`); // Removed for less console spam in background
+            }
+            // If textToSpeak is not empty but currentMinuteInt === lastSpokenMinute, do nothing (already spoken this minute)
+        }
+
+        function setupInterval() {
+            if (updateIntervalId) {
+                clearInterval(updateIntervalId);
+            }
+            const interval = document.visibilityState === 'hidden' ? backgroundInterval : activeInterval;
+            updateIntervalId = setInterval(updateTime, interval);
+            console.log(`Interval set to ${interval}ms for ${document.visibilityState} state.`);
+        }
+
+        // Initial call to display time immediately
+        updateTime();
+
+        // Setup interval initially based on current visibility
+        setupInterval();
+
+        // Listen for visibility changes to adjust the interval
+        document.addEventListener('visibilitychange', setupInterval);
+    </script>
+</body>
+</html>
