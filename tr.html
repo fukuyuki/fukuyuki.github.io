@@ -145,21 +145,17 @@
         const m = String(now.getMinutes()).padStart(2, '0');
         const s = String(now.getSeconds()).padStart(2, '0');
         
-        // 時刻表示の更新
         currentTimeDisplay.innerText = `${h}:${m}:${s}`;
 
         const remindText = remindInput.value.trim();
         const deadlineVal = deadlineInput.value.trim();
 
-        // リマインド内容がある場合のみ処理
         if (remindText) {
             const currentMin = now.getMinutes();
 
-            // 分が変わったタイミングで実行
             if (currentMin !== lastSpokenMinute) {
                 let message = "";
 
-                // 締め切りが入力されている（4桁数字）場合
                 if (deadlineVal.length === 4 && /^\d+$/.test(deadlineVal)) {
                     const targetHH = parseInt(deadlineVal.substring(0, 2));
                     const targetMM = parseInt(deadlineVal.substring(2, 4));
@@ -173,13 +169,12 @@
                         const diffTotalSec = Math.floor(diffMs / 1000);
                         const diffMin = Math.floor(diffTotalSec / 60);
                         const diffSec = diffTotalSec % 60;
-                        message = `残り${diffMin}分${diffSec}秒。${remindText}`;
+                        // リマインド内容を先に、残り時間を後に変更
+                        message = `${remindText} 残り${diffMin}分${diffSec}秒。`;
                     } else {
-                        // 期限を過ぎている場合は内容のみ、または通知なし（今回は内容のみ）
                         message = remindText;
                     }
                 } else {
-                    // 締め切りが空欄（または不適切）な場合は内容のみ
                     message = remindText;
                 }
 
@@ -192,7 +187,6 @@
     }
 
     function speak(text) {
-        // 音声の重複防止
         window.speechSynthesis.cancel();
         
         const uttr = new SpeechSynthesisUtterance(text);
@@ -201,7 +195,6 @@
         window.speechSynthesis.speak(uttr);
     }
 
-    // リセットボタン
     resetButton.addEventListener('click', () => {
         remindInput.value = "";
         deadlineInput.value = "";
@@ -209,7 +202,7 @@
         window.speechSynthesis.cancel();
     });
 
-    // ブラウザのタイマー遅延対策：200ms間隔でチェック
+    // 200ms間隔でチェックして精度の低下を防止
     setInterval(update, 200);
 
 </script>
