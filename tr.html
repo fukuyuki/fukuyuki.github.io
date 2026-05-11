@@ -1,210 +1,247 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>鳥頭リマインダー</title>
-    <style>
-        :root {
-            --bg-color: #0d0d0d;
-            --card-bg: #1a1a1a;
-            --accent-color: #00d4ff;
-            --text-color: #e0e0e0;
-            --input-bg: #262626;
-            --border-color: #333;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鳥頭リマインダー</title>
+<style>
+:root {
+--bg-color: #0d0d0d;
+--card-bg: #1a1a1a;
+--accent-color: #00d4ff;
+--text-color: #e0e0e0;
+--input-bg: #262626;
+--border-color: #333;
+}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
+body {
+background-color: var(--bg-color);
+color: var(--text-color);
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+overflow: hidden;
+}
 
-        .container {
-            background-color: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid var(--border-color);
-        }
+.container {
+background-color: var(--card-bg);
+padding: 2.5rem;
+border-radius: 20px;
+box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+width: 100%;
+max-width: 400px;
+border: 1px solid var(--border-color);
+}
 
-        h1 {
-            font-size: 1.2rem;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            letter-spacing: 4px;
-            color: var(--accent-color);
-            font-weight: 300;
-        }
+h1 {
+font-size: 1.2rem;
+margin-top: 0;
+margin-bottom: 1.5rem;
+text-align: center;
+letter-spacing: 4px;
+color: var(--accent-color);
+font-weight: 300;
+}
 
-        #current_time {
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(0,212,255,0.3);
-        }
+#current_time {
+font-family: 'Monaco', 'Consolas', monospace;
+font-size: 3rem;
+text-align: center;
+margin-bottom: 2rem;
+color: #fff;
+text-shadow: 0 0 10px rgba(0,212,255,0.3);
+}
 
-        .field {
-            margin-bottom: 1.5rem;
-        }
+.field {
+margin-bottom: 1.5rem;
+}
 
-        label {
-            display: block;
-            font-size: 0.75rem;
-            margin-bottom: 0.5rem;
-            color: #888;
-            text-transform: uppercase;
-        }
+label {
+display: block;
+font-size: 0.75rem;
+margin-bottom: 0.5rem;
+color: #888;
+text-transform: uppercase;
+}
 
-        input {
-            width: 100%;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 1rem;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
+input {
+width: 100%;
+background: var(--input-bg);
+border: 1px solid var(--border-color);
+padding: 12px;
+border-radius: 8px;
+color: #fff;
+font-size: 1rem;
+box-sizing: border-box;
+outline: none;
+transition: border-color 0.3s ease;
+}
 
-        input:focus {
-            border-color: var(--accent-color);
-        }
+input:focus {
+border-color: var(--accent-color);
+}
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 0.5rem;
-        }
+button {
+width: 100%;
+padding: 14px;
+background: transparent;
+border: 1px solid var(--accent-color);
+color: var(--accent-color);
+font-weight: bold;
+border-radius: 8px;
+cursor: pointer;
+transition: all 0.3s ease;
+margin-top: 0.5rem;
+}
 
-        button:hover {
-            background: var(--accent-color);
-            color: #000;
-        }
+button:hover {
+background: var(--accent-color);
+color: #000;
+}
 
-        .status {
-            font-size: 0.7rem;
-            text-align: center;
-            margin-top: 1rem;
-            color: #555;
-        }
-    </style>
+.status {
+font-size: 0.7rem;
+text-align: center;
+margin-top: 1rem;
+color: #555;
+}
+
+.bgm-control {
+margin-top: 0.8rem;
+font-size: 0.85rem;
+color: #aaa;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 0.5rem;
+}
+
+.bgm-control input {
+width: auto;
+}
+</style>
 </head>
 <body>
 
 <div class="container">
-    <h1>鳥頭リマインダー</h1>
-    
-    <div id="current_time">00:00:00</div>
+<h1>鳥頭リマインダー</h1>
 
-    <div class="field">
-        <label>リマインド内容</label>
-        <input type="text" id="remind" placeholder="例：NVDIAの株を買う、プロンプトを書く">
-    </div>
+<div id="current_time">00:00:00</div>
 
-    <div class="field">
-        <label>締め切り時間 (HHMM)</label>
-        <input type="text" id="deadline" maxlength="4" placeholder="1530">
-    </div>
+<div class="field">
+<label>リマインド内容</label>
+<input type="text" id="remind" placeholder="例：NVDIAの株を買う、プロンプトを書く">
+</div>
 
-    <button id="reset_button">リセット</button>
-    <div class="status">1分に1回、リマインドを音声で通知します</div>
+<div class="field">
+<label>締め切り時間 (HHMM)</label>
+<input type="text" id="deadline" maxlength="4" placeholder="1530">
+</div>
+
+<button id="reset_button">リセット</button>
+
+<div class="status">1分に1回、リマインドを音声で通知します</div>
+
+<label class="bgm-control">
+<input type="checkbox" id="bgm_checkbox">
+BGMを再生する
+</label>
+
+<audio id="bgm_audio" src="./bgm.mp3" loop></audio>
 </div>
 
 <script>
-    const remindInput = document.getElementById('remind');
-    const deadlineInput = document.getElementById('deadline');
-    const currentTimeDisplay = document.getElementById('current_time');
-    const resetButton = document.getElementById('reset_button');
+const remindInput = document.getElementById('remind');
+const deadlineInput = document.getElementById('deadline');
+const currentTimeDisplay = document.getElementById('current_time');
+const resetButton = document.getElementById('reset_button');
+const bgmCheckbox = document.getElementById('bgm_checkbox');
+const bgmAudio = document.getElementById('bgm_audio');
 
-    let lastSpokenMinute = -1; 
+let lastSpokenMinute = -1;
 
-    function update() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
-        
-        currentTimeDisplay.innerText = `${h}:${m}:${s}`;
+function update() {
+const now = new Date();
+const h = String(now.getHours()).padStart(2, '0');
+const m = String(now.getMinutes()).padStart(2, '0');
+const s = String(now.getSeconds()).padStart(2, '0');
 
-        const remindText = remindInput.value.trim();
-        const deadlineVal = deadlineInput.value.trim();
+currentTimeDisplay.innerText = `${h}:${m}:${s}`;
 
-        if (remindText) {
-            const currentMin = now.getMinutes();
+const remindText = remindInput.value.trim();
+const deadlineVal = deadlineInput.value.trim();
 
-            if (currentMin !== lastSpokenMinute) {
-                let message = "";
+if (remindText) {
+const currentMin = now.getMinutes();
 
-                if (deadlineVal.length === 4 && /^\d+$/.test(deadlineVal)) {
-                    const targetHH = parseInt(deadlineVal.substring(0, 2));
-                    const targetMM = parseInt(deadlineVal.substring(2, 4));
+if (currentMin !== lastSpokenMinute) {
+let message = "";
 
-                    const targetDate = new Date();
-                    targetDate.setHours(targetHH, targetMM, 0, 0);
+if (deadlineVal.length === 4 && /^\d+$/.test(deadlineVal)) {
+const targetHH = parseInt(deadlineVal.substring(0, 2));
+const targetMM = parseInt(deadlineVal.substring(2, 4));
 
-                    const diffMs = targetDate.getTime() - now.getTime();
-                    
-                    if (diffMs > 0) {
-                        const diffTotalSec = Math.floor(diffMs / 1000);
-                        const diffMin = Math.floor(diffTotalSec / 60);
-                        const diffSec = diffTotalSec % 60;
-                        // リマインド内容を先に、残り時間を後に変更
-                        message = `${remindText} 残り${diffMin}分${diffSec}秒。`;
-                    } else {
-                        message = remindText;
-                    }
-                } else {
-                    message = remindText;
-                }
+const targetDate = new Date();
+targetDate.setHours(targetHH, targetMM, 0, 0);
 
-                if (message) {
-                    speak(message);
-                    lastSpokenMinute = currentMin;
-                }
-            }
-        }
-    }
+const diffMs = targetDate.getTime() - now.getTime();
 
-    function speak(text) {
-        window.speechSynthesis.cancel();
-        
-        const uttr = new SpeechSynthesisUtterance(text);
-        uttr.lang = 'ja-JP';
-        uttr.rate = 1.5; 
-        window.speechSynthesis.speak(uttr);
-    }
+if (diffMs > 0) {
+const diffTotalSec = Math.floor(diffMs / 1000);
+const diffMin = Math.floor(diffTotalSec / 60);
+const diffSec = diffTotalSec % 60;
+message = `${remindText} 残り${diffMin}分${diffSec}秒。`;
+} else {
+message = remindText;
+}
+} else {
+message = remindText;
+}
 
-    resetButton.addEventListener('click', () => {
-        remindInput.value = "";
-        deadlineInput.value = "";
-        lastSpokenMinute = -1;
-        window.speechSynthesis.cancel();
-    });
+if (message) {
+speak(message);
+lastSpokenMinute = currentMin;
+}
+}
+}
+}
 
-    // 200ms間隔でチェックして精度の低下を防止
-    setInterval(update, 200);
+function speak(text) {
+window.speechSynthesis.cancel();
 
+const uttr = new SpeechSynthesisUtterance(text);
+uttr.lang = 'ja-JP';
+uttr.rate = 1.5;
+window.speechSynthesis.speak(uttr);
+}
+
+bgmCheckbox.addEventListener('change', () => {
+if (bgmCheckbox.checked) {
+bgmAudio.play().catch(err => {
+console.error('BGMの再生に失敗しました:', err);
+bgmCheckbox.checked = false;
+});
+} else {
+bgmAudio.pause();
+bgmAudio.currentTime = 0;
+}
+});
+
+resetButton.addEventListener('click', () => {
+remindInput.value = "";
+deadlineInput.value = "";
+lastSpokenMinute = -1;
+window.speechSynthesis.cancel();
+
+bgmCheckbox.checked = false;
+bgmAudio.pause();
+bgmAudio.currentTime = 0;
+});
+
+setInterval(update, 200);
 </script>
 
 </body>
