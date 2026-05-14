@@ -1,248 +1,229 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鳥頭リマインダー</title>
+
 <style>
-:root {
---bg-color: #0d0d0d;
---card-bg: #1a1a1a;
---accent-color: #00d4ff;
---text-color: #e0e0e0;
---input-bg: #262626;
---border-color: #333;
-}
-
-body {
-background-color: var(--bg-color);
-color: var(--text-color);
-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
-overflow: hidden;
-}
-
-.container {
-background-color: var(--card-bg);
-padding: 2.5rem;
-border-radius: 20px;
-box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-width: 100%;
-max-width: 400px;
-border: 1px solid var(--border-color);
-}
-
-h1 {
-font-size: 1.2rem;
-margin-top: 0;
-margin-bottom: 1.5rem;
-text-align: center;
-letter-spacing: 4px;
-color: var(--accent-color);
-font-weight: 300;
-}
-
-#current_time {
-font-family: 'Monaco', 'Consolas', monospace;
-font-size: 3rem;
-text-align: center;
-margin-bottom: 2rem;
-color: #fff;
-text-shadow: 0 0 10px rgba(0,212,255,0.3);
-}
-
-.field {
-margin-bottom: 1.5rem;
-}
-
-label {
-display: block;
-font-size: 0.75rem;
-margin-bottom: 0.5rem;
-color: #888;
-text-transform: uppercase;
-}
-
-input {
-width: 100%;
-background: var(--input-bg);
-border: 1px solid var(--border-color);
-padding: 12px;
-border-radius: 8px;
-color: #fff;
-font-size: 1rem;
-box-sizing: border-box;
-outline: none;
-transition: border-color 0.3s ease;
-}
-
-input:focus {
-border-color: var(--accent-color);
-}
-
-button {
-width: 100%;
-padding: 14px;
-background: transparent;
-border: 1px solid var(--accent-color);
-color: var(--accent-color);
-font-weight: bold;
-border-radius: 8px;
-cursor: pointer;
-transition: all 0.3s ease;
-margin-top: 0.5rem;
-}
-
-button:hover {
-background: var(--accent-color);
-color: #000;
-}
-
-.status {
-font-size: 0.7rem;
-text-align: center;
-margin-top: 1rem;
-color: #555;
-}
-
-.bgm-control {
-margin-top: 0.8rem;
-font-size: 0.85rem;
-color: #aaa;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 0.5rem;
-}
-
-.bgm-control input {
-width: auto;
-}
+  :root {
+    --bg: #0d0d0d;
+    --card: #1a1a1a;
+    --accent: #00d4ff;
+    --txt: #e0e0e0;
+    --inp: #262626;
+    --bdr: #333;
+  }
+  #tori-wrap {
+    background: var(--bg);
+    border-radius: 20px;
+    border: 1px solid var(--bdr);
+    padding: 2rem 2rem 1.5rem;
+    max-width: 400px;
+    margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  #tori-wrap h1 {
+    font-size: 1.1rem;
+    text-align: center;
+    letter-spacing: 4px;
+    color: var(--accent);
+    font-weight: 300;
+    margin: 0 0 1.2rem;
+  }
+  #tori-clock {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #fff;
+  }
+  .tori-field { margin-bottom: 1.2rem; }
+  .tori-field label {
+    display: block;
+    font-size: 0.7rem;
+    margin-bottom: 0.4rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .tori-field input[type="text"],
+  .tori-field select {
+    width: 100%;
+    background: var(--inp);
+    border: 1px solid var(--bdr);
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s;
+    appearance: none;
+  }
+  #tori-remind {
+    font-size: 1.3rem !important;
+    min-height: 3rem;
+  }
+  .tori-field input[type="text"]:focus,
+  .tori-field select:focus { border-color: var(--accent); }
+  #tori-reset {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0.3rem;
+    font-size: 0.95rem;
+  }
+  #tori-reset:hover { background: var(--accent); color: #000; }
+  .tori-status {
+    font-size: 0.68rem;
+    text-align: center;
+    margin-top: 0.8rem;
+    color: #555;
+    min-height: 1rem;
+  }
+  .tori-bgm {
+    margin-top: 0.7rem;
+    font-size: 0.82rem;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  .tori-bgm input { width: auto; cursor: pointer; }
+  .tori-row { display: flex; gap: 0.8rem; }
+  .tori-row .tori-field { flex: 1; }
+  .tori-field select option { background: #222; color: #fff; }
 </style>
-</head>
-<body>
 
-<div class="container">
-<h1>鳥頭リマインダー</h1>
+<div id="tori-wrap">
+  <h1>鳥頭リマインダー</h1>
+  <div id="tori-clock">00:00:00</div>
 
-<div id="current_time">00:00:00</div>
+  <div class="tori-field">
+    <label>リマインド内容</label>
+    <input type="text" id="tori-remind" placeholder="例：確定申告のサイトをとりあえず開く">
+  </div>
 
-<div class="field">
-<label>リマインド内容</label>
-<input type="text" id="remind" placeholder="例：確定申告のサイトをとりあえず開く、もう、開くだけでいいからやる">
-</div>
+  <div class="tori-row">
+    <div class="tori-field">
+      <label>締め切り時間 (HHMM)</label>
+      <input type="text" id="tori-deadline" maxlength="4" placeholder="1530">
+    </div>
+    <div class="tori-field">
+      <label>通知間隔</label>
+      <select id="tori-interval">
+        <option value="5">5秒</option>
+        <option value="15">15秒</option>
+        <option value="30">30秒</option>
+        <option value="60" selected>60秒</option>
+      </select>
+    </div>
+  </div>
 
-<div class="field">
-<label>締め切り時間 (HHMM)</label>
-<input type="text" id="deadline" maxlength="4" placeholder="1530">
-</div>
-
-<button id="reset_button">リセット</button>
-
-<div class="status">1分に1回、リマインドを音声で通知します</div>
-
-<label class="bgm-control">
-<input type="checkbox" id="bgm_checkbox">
-BGMを再生する
-</label>
-
-<audio id="bgm_audio" src="./bgm.mp3" loop></audio>
+  <button id="tori-reset">リセット</button>
+  <div class="tori-status" id="tori-status">60秒に1回、リマインドを音声で通知します</div>
+  <label class="tori-bgm">
+    <input type="checkbox" id="tori-bgm-chk"> BGMを再生する
+  </label>
+  <audio id="tori-bgm-audio" src="https://fukuyuki.github.io/bgm.mp3" loop></audio>
 </div>
 
 <script>
-const remindInput = document.getElementById('remind');
-const deadlineInput = document.getElementById('deadline');
-const currentTimeDisplay = document.getElementById('current_time');
-const resetButton = document.getElementById('reset_button');
-const bgmCheckbox = document.getElementById('bgm_checkbox');
-const bgmAudio = document.getElementById('bgm_audio');
+(function() {
+  const remind = document.getElementById('tori-remind');
+  const deadline = document.getElementById('tori-deadline');
+  const clock = document.getElementById('tori-clock');
+  const resetBtn = document.getElementById('tori-reset');
+  const bgmChk = document.getElementById('tori-bgm-chk');
+  const bgmAudio = document.getElementById('tori-bgm-audio');
+  const intervalSel = document.getElementById('tori-interval');
+  const statusEl = document.getElementById('tori-status');
 
-let lastSpokenMinute = -1;
+  let lastSpokenTime = -1;
+  const BGM_DUCK_VOL = 0.15;
+  const BGM_NORMAL_VOL = 1.0;
 
-function update() {
-const now = new Date();
-const h = String(now.getHours()).padStart(2, '0');
-const m = String(now.getMinutes()).padStart(2, '0');
-const s = String(now.getSeconds()).padStart(2, '0');
+  intervalSel.addEventListener('change', () => {
+    statusEl.textContent = `${intervalSel.value}秒に1回、リマインドを音声で通知します`;
+    lastSpokenTime = -1;
+  });
 
-currentTimeDisplay.innerText = `${h}:${m}:${s}`;
+  function getSlotKey(now) {
+    const totalSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    return Math.floor(totalSec / parseInt(intervalSel.value));
+  }
 
-const remindText = remindInput.value.trim();
-const deadlineVal = deadlineInput.value.trim();
+  function speak(text) {
+    window.speechSynthesis.cancel();
+    const uttr = new SpeechSynthesisUtterance(text);
+    uttr.lang = 'ja-JP';
+    uttr.rate = 1.5;
+    const bgmPlaying = !bgmAudio.paused && bgmChk.checked;
+    if (bgmPlaying) bgmAudio.volume = BGM_DUCK_VOL;
+    uttr.onend = () => { if (bgmPlaying) bgmAudio.volume = BGM_NORMAL_VOL; };
+    uttr.onerror = () => { if (bgmPlaying) bgmAudio.volume = BGM_NORMAL_VOL; };
+    window.speechSynthesis.speak(uttr);
+  }
 
-if (remindText) {
-const currentMin = now.getMinutes();
+  function update() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+    clock.textContent = `${h}:${m}:${s}`;
 
-if (currentMin !== lastSpokenMinute) {
-let message = "";
+    const remindText = remind.value.trim();
+    if (!remindText) return;
 
-if (deadlineVal.length === 4 && /^\d+$/.test(deadlineVal)) {
-const targetHH = parseInt(deadlineVal.substring(0, 2));
-const targetMM = parseInt(deadlineVal.substring(2, 4));
+    const slot = getSlotKey(now);
+    if (slot === lastSpokenTime) return;
 
-const targetDate = new Date();
-targetDate.setHours(targetHH, targetMM, 0, 0);
+    const deadlineVal = deadline.value.trim();
+    let message = '';
 
-const diffMs = targetDate.getTime() - now.getTime();
+    if (deadlineVal.length === 4 && /^\d{4}$/.test(deadlineVal)) {
+      const target = new Date();
+      target.setHours(parseInt(deadlineVal.substring(0, 2)), parseInt(deadlineVal.substring(2, 4)), 0, 0);
+      const diffMs = target.getTime() - now.getTime();
+      if (diffMs > 0) {
+        const diffMin = Math.floor(diffMs / 60000);
+        const diffSec = Math.floor((diffMs % 60000) / 1000);
+        message = `${remindText} 残り${diffMin}分${diffSec}秒。`;
+      } else {
+        message = `${remindText} 現在時刻は${h}時${m}分です。`;
+      }
+    } else {
+      message = `${remindText} 現在時刻は${h}時${m}分です。`;
+    }
 
-if (diffMs > 0) {
-const diffTotalSec = Math.floor(diffMs / 1000);
-const diffMin = Math.floor(diffTotalSec / 60);
-const diffSec = diffTotalSec % 60;
-message = `${remindText} 残り${diffMin}分${diffSec}秒。`;
-} else {
-message = remindText;
-}
-} else {
-message = remindText;
-}
+    speak(message);
+    lastSpokenTime = slot;
+  }
 
-if (message) {
-speak(message);
-lastSpokenMinute = currentMin;
-}
-}
-}
-}
+  bgmChk.addEventListener('change', () => {
+    if (bgmChk.checked) {
+      bgmAudio.volume = BGM_NORMAL_VOL;
+      bgmAudio.play().catch(() => { bgmChk.checked = false; });
+    } else {
+      bgmAudio.pause();
+      bgmAudio.currentTime = 0;
+    }
+  });
 
-function speak(text) {
-window.speechSynthesis.cancel();
+  resetBtn.addEventListener('click', () => {
+    remind.value = '';
+    deadline.value = '';
+    lastSpokenTime = -1;
+    window.speechSynthesis.cancel();
+    bgmChk.checked = false;
+    bgmAudio.pause();
+    bgmAudio.currentTime = 0;
+    bgmAudio.volume = BGM_NORMAL_VOL;
+  });
 
-const uttr = new SpeechSynthesisUtterance(text);
-uttr.lang = 'ja-JP';
-uttr.rate = 1.5;
-window.speechSynthesis.speak(uttr);
-}
-
-bgmCheckbox.addEventListener('change', () => {
-if (bgmCheckbox.checked) {
-bgmAudio.play().catch(err => {
-console.error('BGMの再生に失敗しました:', err);
-bgmCheckbox.checked = false;
-});
-} else {
-bgmAudio.pause();
-bgmAudio.currentTime = 0;
-}
-});
-
-resetButton.addEventListener('click', () => {
-remindInput.value = "";
-deadlineInput.value = "";
-lastSpokenMinute = -1;
-window.speechSynthesis.cancel();
-
-bgmCheckbox.checked = false;
-bgmAudio.pause();
-bgmAudio.currentTime = 0;
-});
-
-setInterval(update, 200);
+  setInterval(update, 200);
+})();
 </script>
-
-</body>
-</html>
