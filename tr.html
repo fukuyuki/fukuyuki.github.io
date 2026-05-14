@@ -1,21 +1,25 @@
 
 <style>
+  #tori-outer {
+    background: #0d0d0d;
+    padding: 2rem 1rem;
+    border-radius: 12px;
+  }
   :root {
     --bg: #0d0d0d;
-    --card: #1a1a1a;
     --accent: #00d4ff;
-    --txt: #e0e0e0;
     --inp: #262626;
     --bdr: #333;
   }
   #tori-wrap {
-    background: var(--bg);
+    background: #1a1a1a;
     border-radius: 20px;
     border: 1px solid var(--bdr);
     padding: 2rem 2rem 1.5rem;
     max-width: 400px;
     margin: 0 auto;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #e0e0e0;
   }
   #tori-wrap h1 {
     font-size: 1.1rem;
@@ -98,37 +102,39 @@
   .tori-field select option { background: #222; color: #fff; }
 </style>
 
-<div id="tori-wrap">
-  <h1>鳥頭リマインダー</h1>
-  <div id="tori-clock">00:00:00</div>
+<div id="tori-outer">
+  <div id="tori-wrap">
+    <h1>鳥頭リマインダー</h1>
+    <div id="tori-clock">00:00:00</div>
 
-  <div class="tori-field">
-    <label>リマインド内容</label>
-    <input type="text" id="tori-remind" placeholder="例：確定申告のサイトをとりあえず開く">
-  </div>
-
-  <div class="tori-row">
     <div class="tori-field">
-      <label>締め切り時間 (HHMM)</label>
-      <input type="text" id="tori-deadline" maxlength="4" placeholder="1530">
+      <label>リマインド内容</label>
+      <input type="text" id="tori-remind" placeholder="例：確定申告のサイトをとりあえず開く">
     </div>
-    <div class="tori-field">
-      <label>通知間隔</label>
-      <select id="tori-interval">
-        <option value="5">5秒</option>
-        <option value="15">15秒</option>
-        <option value="30">30秒</option>
-        <option value="60" selected>60秒</option>
-      </select>
-    </div>
-  </div>
 
-  <button id="tori-reset">リセット</button>
-  <div class="tori-status" id="tori-status">60秒に1回、リマインドを音声で通知します</div>
-  <label class="tori-bgm">
-    <input type="checkbox" id="tori-bgm-chk"> BGMを再生する
-  </label>
-  <audio id="tori-bgm-audio" src="https://fukuyuki.github.io/bgm.mp3" loop></audio>
+    <div class="tori-row">
+      <div class="tori-field">
+        <label>締め切り時間 (HHMM)</label>
+        <input type="text" id="tori-deadline" maxlength="4" placeholder="1530">
+      </div>
+      <div class="tori-field">
+        <label>通知間隔</label>
+        <select id="tori-interval">
+          <option value="5">5秒</option>
+          <option value="15">15秒</option>
+          <option value="30">30秒</option>
+          <option value="60" selected>60秒</option>
+        </select>
+      </div>
+    </div>
+
+    <button id="tori-reset">リセット</button>
+    <div class="tori-status" id="tori-status">60秒に1回、リマインドを音声で通知します</div>
+    <label class="tori-bgm">
+      <input type="checkbox" id="tori-bgm-chk"> BGMを再生する
+    </label>
+    <audio id="tori-bgm-audio" src="https://fukuyuki.github.io/bgm.mp3" loop></audio>
+  </div>
 </div>
 
 <script>
