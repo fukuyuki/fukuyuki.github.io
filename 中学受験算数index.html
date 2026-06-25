@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>小4中学受験 算数AIドリル</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--pri:#2563eb;--good:#16a34a;--bad:#dc2626;--warn:#f59e0b;--line:#e5e7eb}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;background:var(--bg);color:var(--ink)}header{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;padding:22px 16px}.wrap{max-width:980px;margin:auto}.title{font-size:clamp(22px,4vw,36px);font-weight:800;margin:0}.sub{opacity:.92;margin:8px 0 0}.grid{display:grid;grid-template-columns:1.7fr .9fr;gap:16px;padding:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 24px #0000000d;padding:18px}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.pill{padding:6px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:13px;font-weight:700}.pill.good{background:#dcfce7;color:#166534}.pill.bad{background:#fee2e2;color:#991b1b}.pill.warn{background:#fef3c7;color:#92400e}.q{font-size:clamp(20px,3vw,28px);font-weight:800;line-height:1.55;margin:18px 0;white-space:pre-wrap}.choices{display:grid;gap:10px}.choice{border:2px solid var(--line);background:#fff;border-radius:14px;padding:14px;font-size:18px;text-align:left;cursor:pointer}.choice:hover{border-color:#93c5fd;background:#eff6ff}.choice.selected{border-color:var(--pri);background:#dbeafe}.choice.correct{border-color:var(--good);background:#dcfce7}.choice.wrong{border-color:var(--bad);background:#fee2e2}input.answer{width:100%;font-size:22px;padding:14px;border:2px solid var(--line);border-radius:14px}button{border:0;border-radius:14px;padding:12px 16px;font-weight:800;font-size:16px;cursor:pointer}button.primary{background:var(--pri);color:#fff}button.gray{background:#e5e7eb;color:#111827}button.ghost{background:#fff;border:1px solid var(--line)}.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.explain{margin-top:14px;border-left:5px solid var(--pri);background:#f8fafc;padding:14px;border-radius:12px;line-height:1.7}.side h3{margin:8px 0}.bar{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:5px 0 12px}.bar>span{display:block;height:100%;background:var(--pri);width:0}.weak{font-size:14px;color:var(--muted);line-height:1.6}.small{font-size:13px;color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:14px}td,th{border-bottom:1px solid var(--line);padding:8px;text-align:left}.hidden{display:none}.footer{padding:0 16px 24px}.kbd{font-family:ui-monospace,monospace;background:#f3f4f6;border-radius:6px;padding:1px 5px}@media(max-width:760px){.grid{grid-template-columns:1fr;padding:10px}.card{padding:14px}.row button{flex:1}.choice{font-size:16px}.q{font-size:21px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1 class="title">小4中学受験 算数AIドリル</h1><p class="sub">品川女子中等部を意識した、弱点分析つき適応型ドリル。正解なら難しく、不正解なら少しやさしく。</p></div></header>
+<main class="wrap grid">
+<section class="card">
+ <div class="meta"><span class="pill" id="catPill">分野</span><span class="pill warn" id="lvPill">難しさ</span><span class="pill" id="countPill">0問目</span></div>
+ <div id="question" class="q"></div>
+ <div id="answerArea"></div>
+ <div class="row"><button class="primary" id="checkBtn">答え合わせ</button><button class="gray" id="nextBtn" disabled>次の問題</button><button class="ghost" id="hintBtn">ヒント</button></div>
+ <div id="feedback" class="explain hidden"></div>
+</section>
+<aside class="card side">
+ <h3>現在のレベル</h3><div style="font-size:34px;font-weight:900" id="levelNow">3.0</div><div class="bar"><span id="levelBar"></span></div>
+ <h3>成績</h3><p id="scoreText" class="weak">まだ解答がありません。</p>
+ <h3>弱点</h3><div id="weakness" class="weak">数問解くと表示します。</div>
+ <h3>分野別</h3><table id="catTable"><tr><th>分野</th><th>正答</th></tr></table>
+ <div class="row"><button class="ghost" id="resetBtn">リセット</button></div>
+</aside>
+</main>
+<div class="wrap footer card"><b>使い方</b>：まずはレベル3前後から開始。10〜20問解くと、苦手分野に寄せつつ、正答率に応じて難易度を自動調整します。データはブラウザ内に保存されます。</div>
+<script>
+const CATS=["計算","文章題","図形","規則性","場合の数","速さ","和差算","植木算","推理","単位"];
+function rint(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}
+function gcd(a,b){while(b){[a,b]=[b,a%b]}return Math.abs(a)}
+function makeChoices(ans){let s=new Set([ans]);let base=Math.max(2,Math.abs(ans));while(s.size<4){let d=rint(-Math.ceil(base*.25)-4,Math.ceil(base*.25)+4); if(d!==0)s.add(ans+d)}return shuffle([...s])}
+function qObj(id,cat,level,text,ans,exp,hint,type="choice"){return {id,cat,level,text,answer:String(ans),choices:type==="choice"?makeChoices(Number(ans)):null,explanation:exp,hint,type}}
+function buildBank(){let qs=[],id=1;
+ for(let i=0;i<100;i++){let cat=CATS[i%CATS.length], lv=1+Math.floor(i/10); let a,b,c,n,ans,text,exp,hint,type="choice";
+ if(cat==="計算"){a=rint(12*lv,35*lv);b=rint(6,18);c=rint(2,9);ans=a+b*c;text=`${a}+${b}×${c} を計算しなさい。`;exp=`かけ算を先にします。${b}×${c}=${b*c}、だから ${a}+${b*c}=${ans}。`;hint="かけ算を先に計算します。"}
+ if(cat==="文章題"){a=rint(60,180+lv*20);b=rint(3,9);c=rint(12,25+lv*2);ans=a-b*c;text=`${a}円持っています。${c}円のえんぴつを${b}本買うと、残りはいくらですか。`;exp=`使ったお金は ${c}×${b}=${c*b}円。残りは ${a}-${c*b}=${ans}円。`;hint="まず全部で何円使うかを考えます。"}
+ if(cat==="図形"){a=rint(4+lv,12+lv);b=rint(3+lv,10+lv);ans=a*b;text=`たて${a}cm、横${b}cmの長方形の面積は何cm²ですか。`;exp=`長方形の面積は たて×横。${a}×${b}=${ans}cm²。`;hint="面積は、たて×横です。"}
+ if(cat==="規則性"){a=rint(2,9);b=rint(3,12+lv);n=rint(5,10+lv);ans=a+(n-1)*b;text=`${a}, ${a+b}, ${a+2*b}, ${a+3*b}, … と続く数列の${n}番目はいくつですか。`;exp=`差は${b}。${n}番目は ${a}+${b}×(${n}-1)=${ans}。`;hint="何ずつ増えているかを見ます。"}
+ if(cat==="場合の数"){a=rint(3,5+Math.min(lv,4));b=rint(2,5+Math.min(lv,4));ans=a*b;text=`上着が${a}種類、ズボンが${b}種類あります。組み合わせは何通りですか。`;exp=`上着1つにつきズボンが${b}通り。${a}×${b}=${ans}通り。`;hint="表や樹形図のかわりに、かけ算で数えられます。"}
+ if(cat==="速さ"){a=rint(40,90);b=rint(2,5+Math.min(lv,5));ans=a*b;text=`分速${a}mで${b}分歩くと、何m進みますか。`;exp=`道のり=速さ×時間。${a}×${b}=${ans}m。`;hint="分速は1分で進む長さです。"}
+ if(cat==="和差算"){a=rint(80,180+lv*20);b=rint(10,60);ans=(a+b)/2;if(ans%1){a++ ; ans=(a+b)/2}text=`2人の所持金の合計は${a}円、差は${b}円です。多い方はいくらですか。`;exp=`多い方は (合計+差)÷2。(${a}+${b})÷2=${ans}円。`;hint="合計に差を足すと、多い方2人分になります。"}
+ if(cat==="植木算"){a=rint(4,12);b=rint(3,8+lv);ans=(b-1)*a;text=`木を${b}本、同じ間隔で一直線に植えます。間を${a}mにすると、端から端まで何mですか。`;exp=`木が${b}本なら、間は${b-1}個。${a}×${b-1}=${ans}m。`;hint="木の数より、間の数は1つ少ないです。"}
+ if(cat==="推理"){a=rint(2,9);b=rint(1,9);ans=a;text=`ある数に${b}を足してから2倍すると${2*(a+b)}になりました。ある数はいくつですか。`;exp=`2倍する前は ${2*(a+b)}÷2=${a+b}。そこから${b}を引いて ${a}。`;hint="逆から、÷2、−足した数、の順にもどします。"}
+ if(cat==="単位"){a=rint(2,9);b=rint(100,900);ans=a*1000+b;text=`${a}km${b}mは何mですか。`;exp=`1km=1000m。${a}km=${a*1000}m。${a*1000}+${b}=${ans}m。`;hint="1kmは1000mです。"}
+ if(lv>=7 && ["文章題","規則性","和差算","推理"].includes(cat)){type="input"}
+ qs.push(qObj(id++,cat,lv,text,ans,exp,hint,type));
+ }
+ return qs;
+}
+const BANK=buildBank();
+let state=JSON.parse(localStorage.getItem("s4math")||"null")||{level:3,asked:[],total:0,correct:0,cat:{},history:[]};
+let current=null, selected=null;
+const el=id=>document.getElementById(id);
+function save(){localStorage.setItem("s4math",JSON.stringify(state))}
+function pickQuestion(){
+ let stats=catStats(); let weak=Object.entries(stats).filter(([c,s])=>s.n>=2&&s.rate<.6).map(([c])=>c);
+ let pool=BANK.filter(q=>!state.asked.includes(q.id)); if(pool.length<5){state.asked=[];pool=BANK.slice()}
+ if(weak.length&&Math.random()<.55) pool=pool.filter(q=>weak.includes(q.cat));
+ let target=state.level; pool=pool.sort((a,b)=>Math.abs(a.level-target)-Math.abs(b.level-target)||Math.random()-.5);
+ return pool[0];
+}
+function render(){current=pickQuestion();selected=null;el("catPill").textContent=current.cat;el("lvPill").textContent="難しさ Lv."+current.level;el("countPill").textContent=(state.total+1)+"問目";el("question").textContent=current.text;el("feedback").classList.add("hidden");el("feedback").innerHTML="";el("nextBtn").disabled=true;el("checkBtn").disabled=false;
+ const area=el("answerArea");area.innerHTML="";
+ if(current.type==="choice"){let div=document.createElement("div");div.className="choices";current.choices.forEach(ch=>{let b=document.createElement("button");b.className="choice";b.textContent=ch;b.onclick=()=>{selected=String(ch);document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};div.appendChild(b)});area.appendChild(div)}
+ else{area.innerHTML='<input class="answer" id="freeAns" inputmode="numeric" placeholder="答えを入力">'} updateSide();}
+function check(){let ans=current.type==="choice"?selected:(el("freeAns")?.value||"").trim(); if(!ans){alert("答えを選ぶか入力してください");return} let ok=String(ans)===String(current.answer); state.total++; if(ok)state.correct++; state.asked.push(current.id); state.cat[current.cat]=state.cat[current.cat]||{n:0,c:0}; state.cat[current.cat].n++; if(ok)state.cat[current.cat].c++; state.history.push({id:current.id,cat:current.cat,level:current.level,ok}); state.history=state.history.slice(-50); state.level=Math.max(1,Math.min(10,state.level+(ok?0.45:-0.55))); save();
+ document.querySelectorAll('.choice').forEach(b=>{if(b.textContent===current.answer)b.classList.add('correct'); else if(b.classList.contains('selected'))b.classList.add('wrong')});
+ el("feedback").classList.remove("hidden");el("feedback").innerHTML=`<b style="color:${ok?'var(--good)':'var(--bad)'}">${ok?'正解！':'不正解'}</b><br>答え：<b>${current.answer}</b><br>${current.explanation}<br><span class="small">次は${ok?'少し難しめ':'少しやさしめ'}の問題を出します。</span>`; el("nextBtn").disabled=false;el("checkBtn").disabled=true;updateSide();}
+function catStats(){let out={};CATS.forEach(c=>{let s=state.cat[c]||{n:0,c:0};out[c]={...s,rate:s.n?s.c/s.n:0}});return out}
+function updateSide(){el("levelNow").textContent=state.level.toFixed(1);el("levelBar").style.width=(state.level*10)+"%";el("scoreText").textContent=state.total?`${state.correct}/${state.total} 正解（正答率 ${Math.round(state.correct/state.total*100)}%）`:"まだ解答がありません。";let stats=catStats();let weak=Object.entries(stats).filter(([c,s])=>s.n>=2).sort((a,b)=>a[1].rate-b[1].rate).slice(0,3);el("weakness").innerHTML=weak.length?weak.map(([c,s])=>`<b>${c}</b>：${s.c}/${s.n}。${advice(c)}`).join("<br>"):"数問解くと表示します。";let rows="<tr><th>分野</th><th>正答</th></tr>";CATS.forEach(c=>{let s=stats[c];rows+=`<tr><td>${c}</td><td>${s.n?`${s.c}/${s.n}`:'-'}</td></tr>`});el("catTable").innerHTML=rows}
+function advice(c){return {"計算":"計算順序と暗算ミスに注意。","文章題":"何を先に求めるか線を引く練習。","図形":"公式を図に書き込む。","規則性":"差・何番目かを表にする。","場合の数":"樹形図で抜けを防ぐ。","速さ":"速さ×時間=道のりを確認。","和差算":"線分図を書く。","植木算":"木と間の数の違いを確認。","推理":"逆算で戻す。","単位":"km・mなどの変換を先に。"}[c]}
+el("checkBtn").onclick=check;el("nextBtn").onclick=render;el("hintBtn").onclick=()=>alert(current.hint);el("resetBtn").onclick=()=>{if(confirm("成績をリセットしますか？")){localStorage.removeItem("s4math");location.reload()}};
+render();
+</script>
+</body>
+</html>
