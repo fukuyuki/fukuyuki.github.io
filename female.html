@@ -72,7 +72,7 @@
             pointer-events: none;
             z-index: 200;
             opacity: 0;
-            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         #feedback-overlay.show-maru {
@@ -405,6 +405,7 @@
     <audio id="audio-ok" src="./ok.mp3" preload="auto"></audio>
     <audio id="audio-ng" src="./ng.mp3" preload="auto"></audio>
     <audio id="audio-bgm" src="./kimigayo.mp3" loop preload="auto"></audio>
+    <audio id="audio-btn" src="./btn.mp3" preload="auto"></audio>
 
     <!-- 〇/✕ オーバーレイ -->
     <div id="feedback-overlay">〇</div>
@@ -416,13 +417,13 @@
         <!-- スタート画面 -->
         <div id="start-screen" class="screen active">
             <h1>チキチキ女性天皇ゲーム</h1>
-            <p class="subtitle">歴代天皇から「女性天皇」を閃光の速さで見極めよ</p>
+            <p class="subtitle">皇室典範改正万歳。今後は出ない女性天皇を光速で当てるゲームです。</p>
             <p style="color: #718096; font-size: 0.85rem; margin-bottom: 30px; line-height: 1.6;">
                 【制限時間 30秒】<br>
                 誤答はペナルティ (-3秒)！<br>
                 制限時間内で何人正解できるか？
             </p>
-            <button class="btn" onclick="startGame()">開 始</button>
+            <button class="btn" onclick="sounds.playBtn(); setTimeout(startGame, 300)">開 始</button>
         </div>
 
         <!-- ゲーム画面 -->
@@ -451,13 +452,15 @@
             <div class="score-display" id="total-score-display">0 人</div>
             <div class="rank-badge" id="rank-display">RANK: S - 神速の直感</div>
 
+            <button class="btn" onclick="sounds.playBtn(); setTimeout(startGame, 300)">再 挑 戦</button>
+
             <!-- 修正：以前抜け落ちていた詳細情報エリア -->
             <div class="stats-detail">
                 回答数: <span id="total-answered-count" style="color: var(--text);">0</span> 回<br>
                 正解率: <span id="accuracy-rate" style="color: var(--accent-green);">0</span>%<br>
                 最大コンボ: <span id="max-combo-count" style="color: var(--primary);">0</span>
             </div>
-            
+
             <!-- オンラインランキングセクション -->
             <div class="ranking-box">
                 <div class="ranking-title">WORLD RANKING (TOP 10)</div>
@@ -469,8 +472,6 @@
                     <li class="ranking-item" style="justify-content: center; color: #8a99ad;">読み込み中...</li>
                 </ul>
             </div>
-
-            <button class="btn" onclick="startGame()">再 挑 戦</button>
         </div>
     </div>
 
@@ -589,7 +590,8 @@
             ok: document.getElementById('audio-ok'),
             ng: document.getElementById('audio-ng'),
             bgm: document.getElementById('audio-bgm'),
-            
+            btn: document.getElementById('audio-btn'),
+
             playOk: function() {
                 this.ok.currentTime = 0;
                 this.ok.play().catch(e => console.log(e));
@@ -605,6 +607,10 @@
             stopBgm: function() {
                 this.bgm.pause();
                 this.bgm.currentTime = 0;
+            },
+            playBtn: function() {
+                this.btn.currentTime = 0;
+                this.btn.play().catch(e => console.log(e));
             }
         };
 
@@ -858,7 +864,7 @@
                 cardElement.style.background = 'rgba(51, 136, 255, 0.25)';
             }
 
-            setTimeout(nextQuestion, 350);
+            setTimeout(nextQuestion, 200);
         }
 
         function showFeedback(type) {
@@ -869,7 +875,7 @@
 
             setTimeout(() => {
                 feedbackOverlay.className = '';
-            }, 300);
+            }, 150);
         }
 
         function showCombo(count) {
