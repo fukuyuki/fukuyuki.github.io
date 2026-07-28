@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONO FEMINA - 女性天皇を判別せよ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+JP:wght@600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #030308;
+            --card-bg: rgba(12, 14, 22, 0.78);
+            --card-border: rgba(197, 160, 89, 0.25);
+            --primary: #c5a059; /* 上品なゴールド */
+            --primary-glow: rgba(197, 160, 89, 0.6);
+            --text: #e0e6ed;
+            --accent-red: #ff3366;
+            --accent-green: #00ffcc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Noto Serif JP', serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 宇宙背景＆パーティクルキャンバス */
+        #space-canvas, #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        #space-canvas { z-index: 1; }
+        #particle-canvas { z-index: 100; }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            padding: 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 〇・✕ スタイリッシュオーバーレイ演出 */
+        #feedback-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            font-size: 16rem;
+            font-weight: 900;
+            font-family: 'Cinzel', sans-serif;
+            line-height: 1;
+            pointer-events: none;
+            z-index: 200;
+            opacity: 0;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #feedback-overlay.show-maru {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            color: #ff3355;
+            text-shadow: 0 0 30px #ff3355, 0 0 60px #ff0033, 0 0 100px #ff0055;
+        }
+
+        #feedback-overlay.show-batsu {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            color: #3388ff;
+            text-shadow: 0 0 30px #3388ff, 0 0 60px #0055ff, 0 0 100px #0033ff;
+        }
+
+        /* スクリーン管理 */
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 36px 28px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 
+                        0 0 35px rgba(197, 160, 89, 0.08),
+                        inset 0 0 2px rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* タイトル・ヘッダー */
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.3rem;
+            letter-spacing: 4px;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary-glow);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: #8a99ad;
+            margin-bottom: 30px;
+        }
+
+        /* 出題テキスト */
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--primary);
+            text-shadow: 0 0 12px var(--primary-glow);
+            margin-bottom: 16px;
+        }
+
+        /* ボタン */
+        .btn {
+            background: linear-gradient(135deg, #c5a059 0%, #8c6f3e 100%);
+            color: #000;
+            font-family: 'Noto Serif JP', serif;
+            font-weight: 900;
+            font-size: 1rem;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 25px rgba(197, 160, 89, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(197, 160, 89, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* コンボ表示 */
+        .combo-badge {
+            position: absolute;
+            top: -20px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-green);
+            text-shadow: 0 0 15px var(--accent-green);
+            opacity: 0;
+            transform: translateY(10px) scale(0.8);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .combo-badge.active {
+            opacity: 1;
+            transform: translateY(0) scale(1.1);
+        }
+
+        /* ゲーム情報表示エリア */
+        .game-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-family: 'Cinzel', serif;
+            position: relative;
+        }
+
+        .badge {
+            font-size: 0.9rem;
+            color: #8a99ad;
+            letter-spacing: 1px;
+        }
+
+        .badge span {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* タイムバー */
+        .timer-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .timer-bar {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--primary));
+            box-shadow: 0 0 10px var(--accent-green);
+            transition: width 0.1s linear, background-color 0.3s ease;
+        }
+
+        .timer-bar.warning {
+            background: var(--accent-red);
+            box-shadow: 0 0 10px var(--accent-red);
+        }
+
+        /* 選択肢グリッド */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .option-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(197, 160, 89, 0.2);
+        }
+
+        /* リザルト画面 */
+        .score-display {
+            font-size: 3rem;
+            font-family: 'Cinzel', serif;
+            color: var(--primary);
+            text-shadow: 0 0 25px var(--primary-glow);
+            margin: 5px 0;
+        }
+
+        .rank-badge {
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--accent-green);
+            text-shadow: 0 0 10px var(--accent-green);
+            margin-bottom: 15px;
+            padding: 4px 14px;
+            border: 1px solid var(--accent-green);
+            border-radius: 20px;
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .stats-detail {
+            margin-bottom: 20px;
+            color: #a0aec0;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* ランキングセクション */
+        .ranking-box {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .ranking-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+            padding-bottom: 6px;
+        }
+
+        .ranking-form {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .ranking-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #fff;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .ranking-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+
+        .ranking-list {
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+            text-align: left;
+            padding-right: 4px;
+        }
+
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+        }
+
+        .ranking-item:nth-child(1) { color: #ffd700; font-weight: bold; }
+        .ranking-item:nth-child(2) { color: #c0c0c0; font-weight: bold; }
+        .ranking-item:nth-child(3) { color: #b87333; font-weight: bold; }
+
+        /* フラッシュ＆振動 */
+        body.flash-success { animation: flashRed 0.4s ease-out; }
+        body.flash-error { animation: flashBlue 0.4s ease-out; }
+
+        @keyframes flashRed {
+            0% { background-color: rgba(255, 51, 85, 0.35); }
+            100% { background-color: var(--bg-color); }
+        }
+
+        @keyframes flashBlue {
+            0% { background-color: rgba(51, 136, 255, 0.35); }
+            100% { background-color: var(--bg-color); }
+        }
+
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 音声エレメント -->
+    <audio id="audio-ok" src="./ok.mp3" preload="auto"></audio>
+    <audio id="audio-ng" src="./ng.mp3" preload="auto"></audio>
+    <audio id="audio-bgm" src="./kimigayo.mp3" loop preload="auto"></audio>
+
+    <!-- 〇/✕ オーバーレイ -->
+    <div id="feedback-overlay">〇</div>
+
+    <canvas id="space-canvas"></canvas>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="container">
+        <!-- スタート画面 -->
+        <div id="start-screen" class="screen active">
+            <h1>CHRONO FEMINA</h1>
+            <p class="subtitle">歴代天皇から「女性天皇」を閃光の速さで見極めよ</p>
+            <p style="color: #718096; font-size: 0.85rem; margin-bottom: 30px; line-height: 1.6;">
+                【制限時間 30秒】<br>
+                誤答はペナルティ (-3秒)！<br>
+                制限時間内で何人正解できるか？
+            </p>
+            <button class="btn" onclick="startGame()">開 始</button>
+        </div>
+
+        <!-- ゲーム画面 -->
+        <div id="game-screen" class="screen">
+            <div id="combo-badge" class="combo-badge">2 COMBO!</div>
+
+            <div class="question-title">この中で女性天皇はだれ？</div>
+
+            <div class="game-header">
+                <div class="badge">SCORE: <span id="score-text">0</span> 人</div>
+                <div class="badge">TIME: <span id="timer-text">30.0</span>s</div>
+            </div>
+            
+            <div class="timer-container">
+                <div id="timer-bar" class="timer-bar"></div>
+            </div>
+
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <!-- リザルト画面 -->
+        <div id="result-screen" class="screen">
+            <h1>RESULT</h1>
+            <p class="subtitle">タイムアップ</p>
+            
+            <div class="score-display" id="total-score-display">0 人</div>
+            <div class="rank-badge" id="rank-display">RANK: S - 神速の直感</div>
+
+            <!-- 修正：以前抜け落ちていた詳細情報エリア -->
+            <div class="stats-detail">
+                回答数: <span id="total-answered-count" style="color: var(--text);">0</span> 回<br>
+                正解率: <span id="accuracy-rate" style="color: var(--accent-green);">0</span>%<br>
+                最大コンボ: <span id="max-combo-count" style="color: var(--primary);">0</span>
+            </div>
+            
+            <!-- オンラインランキングセクション -->
+            <div class="ranking-box">
+                <div class="ranking-title">WORLD RANKING (TOP 10)</div>
+                <div class="ranking-form" id="ranking-form-area">
+                    <input type="text" id="player-name" class="ranking-input" placeholder="名前を入力 (最大10文字)" maxlength="10">
+                    <button class="btn btn-sm" id="submit-score-btn" onclick="submitScore()">登録</button>
+                </div>
+                <ul class="ranking-list" id="ranking-list">
+                    <li class="ranking-item" style="justify-content: center; color: #8a99ad;">読み込み中...</li>
+                </ul>
+            </div>
+
+            <button class="btn" onclick="startGame()">再 挑 戦</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (v10 Modular via CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // ★ ご自身のFirebase設定と置き換えてください
+        const firebaseConfig = {
+             apiKey: "AIzaSyBLCcXfPXboHZEdXG5Rhyy6TaXNXwrZmgo",
+
+    authDomain: "fukuyukidb.firebaseapp.com",
+
+    databaseURL: "https://fukuyukidb-default-rtdb.firebaseio.com",
+
+    projectId: "fukuyukidb",
+
+    storageBucket: "fukuyukidb.firebasestorage.app",
+
+    messagingSenderId: "647751855415",
+
+    appId: "1:647751855415:web:812586b9f6bc92ccab3eb2"
+
+        };
+
+        let db = null;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch(e) {
+            console.warn("Firebase config is not set up correctly.", e);
+        }
+
+        // ランキング取得関数
+        async function fetchRanking() {
+            const listEl = document.getElementById('ranking-list');
+            if (!db) {
+                listEl.innerHTML = `<li class="ranking-item" style="justify-content: center; color: #8a99ad;">Firebase未設定</li>`;
+                return;
+            }
+
+            try {
+                const q = query(collection(db, "rankings"), orderBy("score", "desc"), limit(10));
+                const querySnapshot = await getDocs(q);
+                listEl.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    listEl.innerHTML = `<li class="ranking-item" style="justify-content: center; color: #8a99ad;">登録データがありません</li>`;
+                    return;
+                }
+
+                let rank = 1;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'ranking-item';
+                    li.innerHTML = `
+                        <span>${rank}. ${escapeHTML(data.name || '名無し')}</span>
+                        <span>${data.score} 人</span>
+                    `;
+                    listEl.appendChild(li);
+                    rank++;
+                });
+            } catch (error) {
+                console.error("Error fetching ranking:", error);
+                listEl.innerHTML = `<li class="ranking-item" style="justify-content: center; color: #ff3366;">取得失敗</li>`;
+            }
+        }
+
+        // スコア送信関数
+        async function submitScore() {
+            const nameInput = document.getElementById('player-name');
+            const submitBtn = document.getElementById('submit-score-btn');
+            const name = nameInput.value.trim() || '名無し';
+
+            if (!db) {
+                alert("Firebaseの設定を行ってください。");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '送信中...';
+
+            try {
+                await addDoc(collection(db, "rankings"), {
+                    name: name,
+                    score: window.latestScore || 0,
+                    createdAt: serverTimestamp()
+                });
+                
+                document.getElementById('ranking-form-area').style.display = 'none';
+                await fetchRanking();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("送信に失敗しました。");
+                submitBtn.disabled = false;
+                submitBtn.textContent = '登録';
+            }
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // グローバルスコープへ公開
+        window.fetchRanking = fetchRanking;
+        window.submitScore = submitScore;
+    </script>
+
+    <script>
+        // サウンド制御
+        const sounds = {
+            ok: document.getElementById('audio-ok'),
+            ng: document.getElementById('audio-ng'),
+            bgm: document.getElementById('audio-bgm'),
+            
+            playOk: function() {
+                this.ok.currentTime = 0;
+                this.ok.play().catch(e => console.log(e));
+            },
+            playNg: function() {
+                this.ng.currentTime = 0;
+                this.ng.play().catch(e => console.log(e));
+            },
+            playBgm: function() {
+                this.bgm.currentTime = 0;
+                this.bgm.play().catch(e => console.log(e));
+            },
+            stopBgm: function() {
+                this.bgm.pause();
+                this.bgm.currentTime = 0;
+            }
+        };
+
+        // 女性天皇データ
+        const femaleEmperorNames = [
+            "推古天皇", "皇極天皇", "斉明天皇", "持統天皇", 
+            "元明天皇", "元正天皇", "孝謙天皇", "称徳天皇", 
+            "明正天皇", "後桜町天皇"
+        ];
+
+        const maleEmperors = [
+            "神武天皇", "綏靖天皇", "安寧天皇", "懿徳天皇", "孝昭天皇", "孝安天皇", "孝霊天皇", "孝元天皇", "開化天皇", "崇神天皇",
+            "垂仁天皇", "景行天皇", "成務天皇", "仲哀天皇", "応神天皇", "仁徳天皇", "履中天皇", "反正天皇", "允恭天皇", "安康天皇",
+            "雄略天皇", "清寧天皇", "顕宗天皇", "仁賢天皇", "武烈天皇", "継体天皇", "安閑天皇", "宣化天皇", "欽明天皇", "敏達天皇",
+            "用明天皇", "崇峻天皇", "舒明天皇", "孝徳天皇", "天智天皇", "天武天皇", "文武天皇", "聖武天皇", "淳仁天皇", "光仁天皇",
+            "桓武天皇", "平城天皇", "嵯峨天皇", "淳和天皇", "仁明天皇", "文徳天皇", "清和天皇", "陽成天皇", "光孝天皇", "宇多天皇",
+            "醍醐天皇", "朱雀天皇", "村上天皇", "冷泉天皇", "円融天皇", "花山天皇", "一条天皇", "三条天皇", "後一条天皇", "後朱雀天皇",
+            "後冷泉天皇", "後三条天皇", "白河天皇", "堀河天皇", "鳥羽天皇", "崇徳天皇", "近衛天皇", "後白河天皇", "二条天皇", "六条天皇",
+            "高倉天皇", "安徳天皇", "後鳥羽天皇", "土御門天皇", "順徳天皇", "仲恭天皇", "後堀河天皇", "四条天皇", "後嵯峨天皇", "後深草天皇",
+            "亀山天皇", "後宇多天皇", "伏見天皇", "後伏見天皇", "後二条天皇", "花園天皇", "後醍醐天皇", "光厳天皇", "崇光天皇",
+            "後光厳天皇", "後円融天皇", "後小松天皇", "称光天皇", "後花園天皇", "後土御門天皇", "後柏原天皇", "後奈良天皇", "正親町天皇", "後陽成天皇",
+            "後水尾天皇", "後光明天皇", "後西天皇", "霊元天皇", "東山天皇", "中御門天皇", "桜町天皇", "桃園天皇", "後桃園天皇",
+            "光格天皇", "仁孝天皇", "孝明天皇", "明治天皇", "大正天皇", "昭和天皇", "上皇（明仁）", "天皇（徳仁）"
+        ];
+
+        const uniqueMaleEmperors = [...new Set(maleEmperors)];
+
+        // ゲーム状態
+        let correctAnswersCount = 0;
+        let totalAnsweredCount = 0;
+        let currentCombo = 0;
+        let maxCombo = 0;
+        let remainingTime = 30.0;
+        const initialTime = 30.0;
+        let timerInterval = null;
+        let lastTimestamp = 0;
+        let isAnswered = false;
+
+        // UI
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const optionsContainer = document.getElementById('options-container');
+        const scoreTextEl = document.getElementById('score-text');
+        const timerTextEl = document.getElementById('timer-text');
+        const timerBarEl = document.getElementById('timer-bar');
+        const comboBadgeEl = document.getElementById('combo-badge');
+        const feedbackOverlay = document.getElementById('feedback-overlay');
+
+        // キャンバス
+        const spaceCanvas = document.getElementById('space-canvas');
+        const spaceCtx = spaceCanvas.getContext('2d');
+        const particleCanvas = document.getElementById('particle-canvas');
+        const particleCtx = particleCanvas.getContext('2d');
+
+        function resizeCanvases() {
+            spaceCanvas.width = window.innerWidth;
+            spaceCanvas.height = window.innerHeight;
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+            initStars();
+        }
+        window.addEventListener('resize', resizeCanvases);
+
+        // 宇宙背景
+        let stars = [];
+        let nebulaTime = 0;
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: (Math.random() - 0.5) * spaceCanvas.width * 2,
+                    y: (Math.random() - 0.5) * spaceCanvas.height * 2,
+                    z: Math.random() * spaceCanvas.width,
+                    size: Math.random() * 1.5 + 0.5,
+                    color: Math.random() > 0.3 ? '#ffffff' : (Math.random() > 0.5 ? '#00ffcc' : '#c5a059')
+                });
+            }
+        }
+
+        function drawSpace() {
+            spaceCtx.fillStyle = '#030308';
+            spaceCtx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+
+            const cx = spaceCanvas.width / 2;
+            const cy = spaceCanvas.height / 2;
+
+            nebulaTime += 0.005;
+            const g1X = cx + Math.sin(nebulaTime * 0.8) * 150;
+            const g1Y = cy + Math.cos(nebulaTime * 0.5) * 100;
+            const grad1 = spaceCtx.createRadialGradient(g1X, g1Y, 10, g1X, g1Y, spaceCanvas.width * 0.45);
+            grad1.addColorStop(0, 'rgba(197, 160, 89, 0.12)');
+            grad1.addColorStop(0.5, 'rgba(75, 0, 130, 0.08)');
+            grad1.addColorStop(1, 'transparent');
+            spaceCtx.fillStyle = grad1;
+            spaceCtx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height);
+
+            for (let i = 0; i < stars.length; i++) {
+                let s = stars[i];
+                s.z -= 1.5;
+
+                if (s.z <= 0) {
+                    s.z = spaceCanvas.width;
+                    s.x = (Math.random() - 0.5) * spaceCanvas.width * 2;
+                    s.y = (Math.random() - 0.5) * spaceCanvas.height * 2;
+                }
+
+                const k = 250 / s.z;
+                const px = s.x * k + cx;
+                const py = s.y * k + cy;
+
+                if (px >= 0 && px <= spaceCanvas.width && py >= 0 && py <= spaceCanvas.height) {
+                    const size = Math.max(0.1, (1 - s.z / spaceCanvas.width) * s.size * 2.5);
+                    const alpha = Math.min(1, (1 - s.z / spaceCanvas.width) * 1.2);
+
+                    spaceCtx.save();
+                    spaceCtx.globalAlpha = alpha;
+                    spaceCtx.fillStyle = s.color;
+                    spaceCtx.shadowBlur = size * 3;
+                    spaceCtx.shadowColor = s.color;
+                    spaceCtx.beginPath();
+                    spaceCtx.arc(px, py, size, 0, Math.PI * 2);
+                    spaceCtx.fill();
+                    spaceCtx.restore();
+                }
+            }
+
+            requestAnimationFrame(drawSpace);
+        }
+
+        // ロジック
+        function startGame() {
+            correctAnswersCount = 0;
+            totalAnsweredCount = 0;
+            currentCombo = 0;
+            maxCombo = 0;
+            remainingTime = initialTime;
+            
+            scoreTextEl.textContent = "0";
+            
+            const formArea = document.getElementById('ranking-form-area');
+            if (formArea) formArea.style.display = 'flex';
+            
+            const btn = document.getElementById('submit-score-btn');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = '登録';
+            }
+
+            showScreen(gameScreen);
+            
+            sounds.playBgm();
+            startGlobalTimer();
+            nextQuestion();
+        }
+
+        function startGlobalTimer() {
+            clearInterval(timerInterval);
+            lastTimestamp = performance.now();
+
+            timerInterval = setInterval(() => {
+                const now = performance.now();
+                const delta = (now - lastTimestamp) / 1000;
+                lastTimestamp = now;
+
+                remainingTime = Math.max(0, remainingTime - delta);
+                
+                timerTextEl.textContent = remainingTime.toFixed(1);
+                const percentage = Math.min(100, (remainingTime / initialTime) * 100);
+                timerBarEl.style.width = `${percentage}%`;
+
+                if (remainingTime <= 5) {
+                    timerBarEl.classList.add('warning');
+                } else {
+                    timerBarEl.classList.remove('warning');
+                }
+
+                if (remainingTime <= 0) {
+                    endGame();
+                }
+            }, 50);
+        }
+
+        function nextQuestion() {
+            if (remainingTime <= 0) {
+                endGame();
+                return;
+            }
+
+            isAnswered = false;
+
+            const correctTarget = femaleEmperorNames[Math.floor(Math.random() * femaleEmperorNames.length)];
+            const shuffledMales = [...uniqueMaleEmperors].sort(() => 0.5 - Math.random());
+            const selectedMales = shuffledMales.slice(0, 3);
+            const options = [correctTarget, ...selectedMales].sort(() => 0.5 - Math.random());
+
+            optionsContainer.innerHTML = '';
+            options.forEach(name => {
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.textContent = name;
+                card.onclick = (e) => checkAnswer(name, correctTarget, card, e);
+                optionsContainer.appendChild(card);
+            });
+        }
+
+        function checkAnswer(selected, correct, cardElement, event) {
+            if (isAnswered || remainingTime <= 0) return;
+            isAnswered = true;
+
+            totalAnsweredCount++;
+
+            const rect = cardElement.getBoundingClientRect();
+            const clickX = event ? event.clientX : rect.left + rect.width / 2;
+            const clickY = event ? event.clientY : rect.top + rect.height / 2;
+
+            if (selected === correct) {
+                correctAnswersCount++;
+                currentCombo++;
+                if (currentCombo > maxCombo) maxCombo = currentCombo;
+
+                scoreTextEl.textContent = correctAnswersCount;
+
+                if (currentCombo >= 2) {
+                    showCombo(currentCombo);
+                }
+
+                sounds.playOk();
+                showFeedback('maru');
+                triggerFlash('success');
+                createParticles(clickX, clickY, '#ff3355', 50);
+                createShockwave(clickX, clickY, '#ff3355');
+
+                cardElement.style.borderColor = 'var(--accent-red)';
+                cardElement.style.background = 'rgba(255, 51, 85, 0.25)';
+            } else {
+                currentCombo = 0;
+                hideCombo();
+
+                remainingTime = Math.max(0, remainingTime - 3.0);
+
+                sounds.playNg();
+                showFeedback('batsu');
+                triggerFlash('error');
+                createParticles(clickX, clickY, '#3388ff', 35);
+                gameScreen.classList.add('shake');
+                setTimeout(() => gameScreen.classList.remove('shake'), 400);
+                
+                cardElement.style.borderColor = '#3388ff';
+                cardElement.style.background = 'rgba(51, 136, 255, 0.25)';
+            }
+
+            setTimeout(nextQuestion, 350);
+        }
+
+        function showFeedback(type) {
+            feedbackOverlay.className = '';
+            feedbackOverlay.textContent = type === 'maru' ? '〇' : '✕';
+            void feedbackOverlay.offsetWidth;
+            feedbackOverlay.classList.add(type === 'maru' ? 'show-maru' : 'show-batsu');
+
+            setTimeout(() => {
+                feedbackOverlay.className = '';
+            }, 300);
+        }
+
+        function showCombo(count) {
+            comboBadgeEl.textContent = `${count} COMBO!`;
+            comboBadgeEl.classList.add('active');
+        }
+
+        function hideCombo() {
+            comboBadgeEl.classList.remove('active');
+        }
+
+        function triggerFlash(type) {
+            document.body.classList.remove('flash-success', 'flash-error');
+            void document.body.offsetWidth;
+            document.body.classList.add(`flash-${type}`);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            hideCombo();
+            sounds.stopBgm();
+
+            window.latestScore = correctAnswersCount;
+
+            document.getElementById('total-score-display').textContent = `${correctAnswersCount} 人`;
+            document.getElementById('total-answered-count').textContent = totalAnsweredCount;
+            
+            const accuracy = totalAnsweredCount > 0 ? Math.round((correctAnswersCount / totalAnsweredCount) * 100) : 0;
+            document.getElementById('accuracy-rate').textContent = accuracy;
+            document.getElementById('max-combo-count').textContent = maxCombo;
+
+            // ランク評価
+            const rankEl = document.getElementById('rank-display');
+            if (correctAnswersCount >= 18) {
+                rankEl.textContent = "RANK: EX - 皇史の神眼";
+                rankEl.style.color = "#00ffcc";
+            } else if (correctAnswersCount >= 12) {
+                rankEl.textContent = "RANK: S - 閃光の見極め手";
+                rankEl.style.color = "#c5a059";
+            } else if (correctAnswersCount >= 7) {
+                rankEl.textContent = "RANK: A - 歴史探訪者";
+                rankEl.style.color = "#e0e6ed";
+            } else {
+                rankEl.textContent = "RANK: B - 見習い記録官";
+                rankEl.style.color = "#8a99ad";
+            }
+
+            showScreen(resultScreen);
+            createParticles(window.innerWidth / 2, window.innerHeight / 2, '#c5a059', 120);
+
+            // オンラインランキング読み込み呼び出し
+            if (window.fetchRanking) {
+                window.fetchRanking();
+            }
+        }
+
+        function showScreen(screenEl) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            screenEl.classList.add('active');
+        }
+
+        // パーティクル＆ショックウェーブ
+        let particles = [];
+
+        function createParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 10 + 2;
+                particles.push({
+                    type: 'particle',
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    size: Math.random() * 5 + 2,
+                    color: color,
+                    alpha: 1,
+                    decay: Math.random() * 0.03 + 0.015
+                });
+            }
+        }
+
+        function createShockwave(x, y, color) {
+            particles.push({
+                type: 'shockwave',
+                x: x,
+                y: y,
+                radius: 10,
+                maxRadius: 200,
+                color: color,
+                alpha: 0.9
+            });
+        }
+
+        function animateParticles() {
+            particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+
+                if (p.type === 'particle') {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.94;
+                    p.vy *= 0.94;
+                    p.alpha -= p.decay;
+
+                    if (p.alpha <= 0) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+
+                    particleCtx.save();
+                    particleCtx.globalAlpha = p.alpha;
+                    particleCtx.fillStyle = p.color;
+                    particleCtx.shadowBlur = 12;
+                    particleCtx.shadowColor = p.color;
+                    particleCtx.beginPath();
+                    particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    particleCtx.fill();
+                    particleCtx.restore();
+                } else if (p.type === 'shockwave') {
+                    p.radius += 12;
+                    p.alpha -= 0.04;
+
+                    if (p.alpha <= 0 || p.radius >= p.maxRadius) {
+                        particles.splice(i, 1);
+                        continue;
+                    }
+
+                    particleCtx.save();
+                    particleCtx.globalAlpha = p.alpha;
+                    particleCtx.strokeStyle = p.color;
+                    particleCtx.lineWidth = 4;
+                    particleCtx.shadowBlur = 20;
+                    particleCtx.shadowColor = p.color;
+                    particleCtx.beginPath();
+                    particleCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    particleCtx.stroke();
+                    particleCtx.restore();
+                }
+            }
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        resizeCanvases();
+        drawSpace();
+        animateParticles();
+    </script>
+</body>
+</html>
